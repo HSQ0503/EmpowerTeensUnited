@@ -19,10 +19,13 @@ export async function generateMetadata({
 
 export default async function CourseDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
   const { slug } = await params;
+  const { error } = await searchParams;
   const course = await prisma.course.findUnique({
     where: { slug },
     include: { courseWeeks: { orderBy: { weekNo: "asc" } } },
@@ -269,6 +272,22 @@ export default async function CourseDetailPage({
                 <br />
                 Starts {formatShortDate(course.startsOn)}
               </div>
+              {error && (
+                <div
+                  style={{
+                    marginTop: 16,
+                    padding: "10px 12px",
+                    background: "rgba(178, 34, 52, 0.18)",
+                    border: "1px solid rgba(255, 255, 255, 0.25)",
+                    borderRadius: 4,
+                    fontSize: 13,
+                    color: "#fff",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {error}
+                </div>
+              )}
               <div style={{ marginTop: 20 }}>
                 {enrolled ? (
                   <Link
