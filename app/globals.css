@@ -1,11 +1,27 @@
 @import "tailwindcss";
 
+@theme {
+  --color-navy: #0F4566;
+  --color-navy-dark: #0a3349;
+  --color-navy-light: #1d5d83;
+  --color-gold: #FCCC00;
+  --color-gold-deep: #e0b300;
+  --color-ink: #101820;
+  --color-body: #3a4754;
+  --color-muted: #6b7785;
+  --color-cream: #FBF7EB;
+  --color-paper: #FAF8F3;
+  --color-off: #F4F1E8;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+  --font-serif: var(--font-source-serif), Georgia, serif;
+}
+
 html, body {
   margin: 0;
   padding: 0;
-  background: #FAF8F3;
-  font-family: var(--font-manrope), system-ui, sans-serif;
-  color: #101820;
+  background: var(--color-paper);
+  font-family: var(--font-sans);
+  color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -21,7 +37,7 @@ a { color: inherit; }
 ::-webkit-scrollbar-thumb {
   background: rgba(15, 69, 102, 0.18);
   border-radius: 999px;
-  border: 2px solid #FAF8F3;
+  border: 2px solid var(--color-paper);
   transition: background 200ms ease;
 }
 ::-webkit-scrollbar-thumb:hover { background: rgba(15, 69, 102, 0.45); }
@@ -33,7 +49,7 @@ html { scrollbar-width: thin; scrollbar-color: rgba(15, 69, 102, 0.2) transparen
 
 /* Focus rings tuned to the brand */
 :focus-visible {
-  outline: 2px solid #FCCC00;
+  outline: 2px solid var(--color-gold);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -49,25 +65,25 @@ html { scrollbar-width: thin; scrollbar-color: rgba(15, 69, 102, 0.2) transparen
 }
 
 /* Selection */
-::selection { background: #FCCC00; color: #0F4566; }
+::selection { background: var(--color-gold); color: var(--color-navy); }
 
 /* Footer link hover */
 .etu-footer-link { display: inline-block; transition: color 200ms ease, transform 200ms ease; }
-.etu-footer-link:hover { color: #FCCC00 !important; transform: translateX(4px); }
+.etu-footer-link:hover { color: var(--color-gold) !important; transform: translateX(4px); }
 
 /* Header utility links */
-.etu-nav-link:hover { color: #0F4566 !important; }
+.etu-nav-link:hover { color: var(--color-navy) !important; }
 
 /* Tab/inline buttons subtle hover */
 .etu-tab { transition: color 200ms ease, border-color 200ms ease; }
-.etu-tab:hover { color: #0F4566 !important; }
+.etu-tab:hover { color: var(--color-navy) !important; }
 
 /* Input focus polish */
 input, textarea, select {
   transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
 }
 input:focus, textarea:focus, select:focus {
-  border-color: #0F4566 !important;
+  border-color: var(--color-navy) !important;
   box-shadow: 0 0 0 3px rgba(15, 69, 102, 0.12);
   outline: none !important;
 }

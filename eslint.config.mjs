@@ -13,7 +13,14 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     ".handoff/**",
+    "prisma/generated/**",
   ]),
+  {
+    files: ["tests/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;
