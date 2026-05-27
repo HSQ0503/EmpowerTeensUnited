@@ -2,7 +2,7 @@
 
 **Goal:** Replace the WordPress site for Empower Teens United with a custom Next.js platform. Friday demo: **2026-05-29 at 1pm with Ivan at Starbucks**.
 
-**Current state:** Phases 0–5, 6a, and 7 DONE on `master` (6b skipped — still pending). **Next up: Phase 6b** (role landing dashboards) and Phase 8 (deploy + demo seed). Run `git log --oneline` for the latest commits.
+**Current state:** Phases 0–5, 6a, 7, and 8 DONE on `master` (6b skipped — still pending). **Only Phase 6b remains in code** (role landing dashboards `/me`, `/mentor/profile`, `/admin`). After 6b, push to Vercel and run the dry-run demo flow. Run `git log --oneline` for the latest commits.
 
 ---
 
@@ -134,11 +134,26 @@ Admin `/admin/broadcasts` list (status pills mapped over `CampaignStatus`), `/ad
 - Add `CRON_SECRET=<random>` to `.env.local`.
 - Phase 8 will wire `vercel.json` with `{ crons: [{ path: "/api/cron/send-campaign?secret=${CRON_SECRET}", schedule: "* * * * *" }] }` so the queue drains every minute.
 
-### Phase 8 — Deploy + demo seed (~1h)
-**Plan:** "Phase 8", tasks 8.1 – 8.3.
-**Deliverable:** Demo data seed gated by `SEED_DEMO=1`, Vercel project deployed, `vercel.json` cron config, Playwright smoke test.
-**Verify:** Walk the full demo flow on the Vercel preview URL — home → register for event → email arrives → admin scans QR → funnel updates → send broadcast → mentor sees student.
-**Watch out for:** Update Vercel env vars including `NEXT_PUBLIC_SITE_URL` to the assigned `*.vercel.app` URL. Update Supabase auth → URL Configuration to allow the Vercel domain.
+### ✅ Phase 8 — Deploy + demo seed (DONE)
+`prisma/seed.ts` extended with a `seedDemo()` block gated on `SEED_DEMO=1` that idempotently upserts 3 events (Rollins / Breaking Thru / Miles To Go), 2 courses with 3 weeks of typed reflection questions each, 3 blog posts, and 3 team members. Skips cleanly when there is no admin profile yet. `next.config.ts` allows `images.unsplash.com` and the project's `*.supabase.co` host for `next/image`. `vercel.json` schedules `/api/cron/send-campaign` every 5 minutes — the cron route already accepts Vercel's auto-injected `Authorization: Bearer $CRON_SECRET`, so no secret in the JSON. `playwright.config.ts` + `tests/e2e/smoke.spec.ts` cover home chrome, sign-in, anon-admin redirect, events list, and the contact form. 3 commits ending at `f1a7dd2`.
+
+**Manual setup to ship for Friday:**
+1. **Seed demo data** (after promoting your profile to `role=admin`):
+   ```powershell
+   $env:SEED_DEMO="1"; npx prisma db seed; Remove-Item Env:SEED_DEMO
+   ```
+2. **Install Playwright chromium** once, then run the smoke spec:
+   ```bash
+   npx playwright install chromium
+   npm run test:e2e
+   ```
+3. **Deploy to Vercel.** Import the GitHub repo, framework preset = Next.js. Add env vars: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `DATABASE_URL`, `DIRECT_URL`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `NEXT_PUBLIC_SITE_URL=https://<your>.vercel.app`, `CRON_SECRET=<long random>`, optional `ETU_TEAM_INBOX`. Deploy.
+4. **Update Supabase auth → URL Configuration** to include the Vercel domain as both Site URL and allowed redirect for `/sign-up/verify` and `/reset-password`.
+5. **Update `NEXT_PUBLIC_SITE_URL`** to the live Vercel URL and redeploy so Supabase email links and QR scan URLs resolve.
+6. **Add the Resend webhook** in the Resend dashboard pointing at `https://<your>.vercel.app/api/webhooks/resend`. Signing remains deferred — comment marks the wrap point inside the route.
+
+**Demo dry-run** (per the plan):
+home → register for an event → email lands with QR → admin scans → funnel updates → send a broadcast to "All students" → recipient sees it → click unsubscribe.
 
 ---
 
