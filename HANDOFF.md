@@ -100,11 +100,12 @@ Public `/courses` + `/courses/[slug]` DB-backed, weekly outline pulled from `cou
 
 **Gotcha** for the next agent: Prisma 7 `Json` columns need `Prisma.InputJsonValue` casts (not `as any`). The `CourseLanguage` enum is re-exported from `@/prisma/generated/client/client`. The student layout still doesn't have a "Courses" nav link — students reach `/me/courses/[slug]` via the "Open my course" CTA on `/courses/[slug]` (added in 4.1). Phase 6b is the natural place to add a `/me` dashboard that lists active enrollments.
 
-### Phase 5 — Mentorship 3-form flow (~2h)
-**Plan:** "Phase 5", tasks 5.1 – 5.4.
-**Deliverable:** Form defs in `lib/forms/{intake,session,hs-plan}.ts`, `/me/mentorship` for students (intake + HS plan), `(mentor)/layout.tsx` + `/mentor` dashboard + `/mentor/students/[id]` for mentors, `/admin/mentorship` pairing grid + `/admin/mentorship/students/[id]` read-only view.
-**Verify:** As admin, pair student with mentor. As student, submit intake. As mentor, see intake. Add a session form. As admin, see all three.
-**Watch out for:** `MentorshipForm` unique constraint `(student_id, kind, session_no)` — for intake/hs_plan with `sessionNo: null`, Postgres treats nulls as distinct, so you can't use simple `upsert`. The plan handles this with a `submitOnceOnlyForm` helper that does findFirst → update or create. Use that pattern.
+### ✅ Phase 5 — Mentorship 3-form flow (DONE)
+Three form defs (`lib/forms/{types,intake,session,hs-plan}.ts`) drive every form on every surface; 5 vitest assertions pin shape (20-Q intake, unique ids, select options, slug-safe ids). Student `/me/mentorship` shows a pillar bar (mentor / intake / sessions), the 20-Q intake, read-only collapsible session notes, and the HS plan capstone. Mentor `/mentor` lists active assignments with status chips (intake done, sessions logged, last-session date) driven by one `groupBy` + one `distinct` query keyed by `studentId`. `/mentor/students/[id]` shows intake + session history + HS plan + course progress, and an inline "Log session N+1" form whose action enforces the mentor still owns the assignment then auto-increments `sessionNo`. Admin `/admin/mentorship` is the pairing grid (totals header, role-validated `assignMentorAction` upsert on `studentId` (which is `@unique`), workload-aware mentor dropdown labels, "End" column via `updateMany`). `/admin/mentorship/students/[id]` mirrors the mentor view read-only.
+
+Shared infra introduced: `app/components/FormRenderer.tsx` + `app/components/FormAnswers.tsx` so any future form (broadcast composer, mentor profile, etc) can drop in. `(mentor)/layout.tsx` is the first mentor shell — top-nav with gold under-stripe to differentiate role. 4 commits ending at `8e04243`.
+
+**Critical gotcha kept**: `MentorshipForm` has `@@unique([studentId, kind, sessionNo])`. Postgres treats NULL as distinct, so an `upsert` on that key with `sessionNo: null` would always insert. `submitOnceOnlyForm` in `app/(student)/me/mentorship/actions.ts` does `findFirst({ where: { sessionNo: null } })` → `update` or `create`. Mirror that pattern for any future once-only form.
 
 ### Phase 6a — Blog + contact + team (~1h)
 **Plan:** tasks 6.1, 6.2, 6.3, 6.4.
