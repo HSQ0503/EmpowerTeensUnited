@@ -1,10 +1,8 @@
 "use client";
 
 import { motion } from "motion/react";
-import { A, aBase } from "@/app/components/tokens";
+import { A } from "@/app/components/tokens";
 import { PHOTOS } from "@/app/components/photos";
-import { Nav } from "@/app/components/Nav";
-import { Footer } from "@/app/components/Footer";
 import { PageHero } from "@/app/components/PageHero";
 import { Reveal } from "@/app/components/motion/Reveal";
 import { Stagger, StaggerItem } from "@/app/components/motion/Stagger";
@@ -35,8 +33,7 @@ export default function Courses() {
   ];
 
   return (
-    <div style={aBase}>
-      <Nav active="courses" />
+    <>
       <PageHero
         breadcrumb={t.courses.breadcrumb}
         title={t.courses.title}
@@ -154,7 +151,6 @@ export default function Courses() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+    </>
   );
 }

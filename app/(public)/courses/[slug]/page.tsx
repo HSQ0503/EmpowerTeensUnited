@@ -2,10 +2,8 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { A, aBase } from "@/app/components/tokens";
+import { A } from "@/app/components/tokens";
 import { PHOTOS } from "@/app/components/photos";
-import { Nav } from "@/app/components/Nav";
-import { Footer } from "@/app/components/Footer";
 import { ConcentricArcs } from "@/app/components/ConcentricArcs";
 import { SectionLabel } from "@/app/components/SectionLabel";
 import { Button } from "@/app/components/Button";
@@ -33,9 +31,7 @@ export default function CourseDetail() {
   const { t } = useLang();
 
   return (
-    <div style={aBase}>
-      <Nav active="courses" />
-
+    <>
       <section style={{ background: A.navy, color: "#fff", padding: "48px 56px 72px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 0, right: 0 }}>
           <ConcentricArcs size={300} color="#FCCC00" opacity={0.15} corner="tr" />
@@ -223,7 +219,6 @@ export default function CourseDetail() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+    </>
   );
 }

@@ -3,10 +3,8 @@
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
-import { A, aBase } from "@/app/components/tokens";
+import { A } from "@/app/components/tokens";
 import { PHOTOS } from "@/app/components/photos";
-import { Nav } from "@/app/components/Nav";
-import { Footer } from "@/app/components/Footer";
 import { ConcentricArcs } from "@/app/components/ConcentricArcs";
 import { SectionLabel } from "@/app/components/SectionLabel";
 import { Button } from "@/app/components/Button";
@@ -39,9 +37,7 @@ export default function EventDetail() {
   ];
 
   return (
-    <div style={aBase}>
-      <Nav active="events" />
-
+    <>
       <motion.section ref={ref} style={{ position: "relative", height: 420, overflow: "hidden" }}>
         <motion.div style={{ position: "absolute", inset: -20, background: `url(${PHOTOS.collegeTour}) center/cover`, y: bgY }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(15,69,102,0.55) 0%, rgba(15,69,102,0.88) 100%)" }} />
@@ -210,7 +206,6 @@ export default function EventDetail() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+    </>
   );
 }

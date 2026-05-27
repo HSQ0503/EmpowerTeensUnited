@@ -1,9 +1,7 @@
 "use client";
 
-import { A, aBase } from "@/app/components/tokens";
+import { A } from "@/app/components/tokens";
 import { PHOTOS } from "@/app/components/photos";
-import { Nav } from "@/app/components/Nav";
-import { Footer } from "@/app/components/Footer";
 import { PageHero } from "@/app/components/PageHero";
 import { ConcentricArcs } from "@/app/components/ConcentricArcs";
 import { SectionLabel } from "@/app/components/SectionLabel";
@@ -43,8 +41,7 @@ export default function About() {
   ];
 
   return (
-    <div style={aBase}>
-      <Nav active="about" />
+    <>
       <PageHero
         breadcrumb={t.about.breadcrumb}
         title={t.about.title}
@@ -154,7 +151,6 @@ export default function About() {
         </Stagger>
       </section>
 
-      <Footer />
-    </div>
+    </>
   );
 }

@@ -1,10 +1,8 @@
 "use client";
 
 import { motion } from "motion/react";
-import { A, aBase } from "@/app/components/tokens";
+import { A } from "@/app/components/tokens";
 import { PHOTOS } from "@/app/components/photos";
-import { Nav } from "@/app/components/Nav";
-import { Footer } from "@/app/components/Footer";
 import { PageHero } from "@/app/components/PageHero";
 import { Reveal } from "@/app/components/motion/Reveal";
 import { Stagger, StaggerItem } from "@/app/components/motion/Stagger";
@@ -34,8 +32,7 @@ const topics: Array<[string, number]> = [
 export default function Blog() {
   const { t } = useLang();
   return (
-    <div style={aBase}>
-      <Nav active="blog" />
+    <>
       <PageHero
         breadcrumb={t.blog.breadcrumb}
         title={t.blog.title}
@@ -152,7 +149,6 @@ export default function Blog() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+    </>
   );
 }

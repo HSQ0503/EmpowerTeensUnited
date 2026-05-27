@@ -2,10 +2,8 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { A, aBase } from "@/app/components/tokens";
+import { A } from "@/app/components/tokens";
 import { PHOTOS } from "@/app/components/photos";
-import { Nav } from "@/app/components/Nav";
-import { Footer } from "@/app/components/Footer";
 import { ConcentricArcs } from "@/app/components/ConcentricArcs";
 import { SectionLabel } from "@/app/components/SectionLabel";
 import { Button } from "@/app/components/Button";
@@ -57,9 +55,7 @@ export default function Home() {
   ];
 
   return (
-    <div style={aBase}>
-      <Nav active="home" />
-
+    <>
       <HomeHero />
 
       <section style={{ background: "#fff", padding: "56px 56px", borderBottom: `1px solid ${A.rule}` }}>
@@ -270,7 +266,6 @@ export default function Home() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+    </>
   );
 }

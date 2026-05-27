@@ -1,10 +1,8 @@
 "use client";
 
 import { motion } from "motion/react";
-import { A, aBase } from "@/app/components/tokens";
+import { A } from "@/app/components/tokens";
 import { PHOTOS } from "@/app/components/photos";
-import { Nav } from "@/app/components/Nav";
-import { Footer } from "@/app/components/Footer";
 import { PageHero } from "@/app/components/PageHero";
 import { SectionLabel } from "@/app/components/SectionLabel";
 import { Button } from "@/app/components/Button";
@@ -24,8 +22,7 @@ export default function Contact() {
   ];
 
   return (
-    <div style={aBase}>
-      <Nav active="contact" />
+    <>
       <PageHero
         breadcrumb={t.contact.breadcrumb}
         title={t.contact.title}
@@ -159,7 +156,6 @@ export default function Contact() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+    </>
   );
 }
