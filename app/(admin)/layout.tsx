@@ -4,47 +4,91 @@ import { requireRole } from "@/lib/auth";
 import { EtuLockup } from "@/app/components/Logo";
 import { A } from "@/app/components/tokens";
 
-// NOTE: This is a Phase 2 stub. Task 3.5 replaces it with the full
-// sidebar version (users / invitations / events / courses / etc).
+const NAV: Array<[string, string]> = [
+  ["Dashboard", "/admin"],
+  ["Events", "/admin/events"],
+  ["Courses", "/admin/courses"],
+  ["Mentorship", "/admin/mentorship"],
+  ["Blog", "/admin/blog"],
+  ["Contact", "/admin/contact"],
+  ["Broadcasts", "/admin/broadcasts"],
+  ["Users", "/admin/users"],
+  ["Invitations", "/admin/invitations"],
+  ["Team", "/admin/team"],
+  ["Settings", "/admin/settings"],
+];
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const { profile } = await requireRole("admin");
 
-  const navLinks: Array<[string, string]> = [
-    ["Dashboard", "/admin"],
-    ["Invitations", "/admin/invitations"],
-  ];
-
   return (
-    <div style={{ minHeight: "100vh", background: A.paper, fontFamily: A.fontBody, color: A.ink }}>
-      <header
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "240px 1fr",
+        minHeight: "100vh",
+        background: A.paper,
+        fontFamily: A.fontBody,
+        color: A.ink,
+      }}
+    >
+      <aside
         style={{
-          background: A.navy,
+          background: A.navyDark,
           color: "#fff",
-          padding: "16px 32px",
-          display: "grid",
-          gridTemplateColumns: "auto 1fr auto",
-          alignItems: "center",
-          gap: 32,
+          padding: "24px 0 16px",
+          display: "flex",
+          flexDirection: "column",
+          position: "sticky",
+          top: 0,
+          alignSelf: "start",
+          height: "100vh",
         }}
       >
-        <Link href="/admin" style={{ textDecoration: "none", display: "inline-flex" }}>
-          <EtuLockup height={40} color="#fff" />
-        </Link>
+        <div style={{ padding: "0 20px 20px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+          <Link
+            href="/admin"
+            style={{ textDecoration: "none", display: "inline-flex" }}
+          >
+            <EtuLockup height={36} color="#fff" />
+          </Link>
+          <div
+            style={{
+              marginTop: 14,
+              fontSize: 11,
+              letterSpacing: 1.4,
+              textTransform: "uppercase",
+              fontWeight: 700,
+              color: A.gold,
+            }}
+          >
+            Admin console
+          </div>
+          <div
+            style={{
+              marginTop: 4,
+              fontSize: 13,
+              fontWeight: 600,
+              color: "#fff",
+              lineHeight: 1.3,
+            }}
+          >
+            {profile.firstName} {profile.lastName}
+          </div>
+        </div>
 
-        <nav style={{ display: "flex", gap: 28, justifyContent: "center" }}>
-          {navLinks.map(([label, href]) => (
+        <nav style={{ display: "flex", flexDirection: "column", padding: "12px 0", flex: 1, overflowY: "auto" }}>
+          {NAV.map(([label, href]) => (
             <Link
               key={href}
               href={href}
               style={{
-                color: "#fff",
+                padding: "10px 20px",
+                color: "rgba(255,255,255,0.85)",
                 textDecoration: "none",
-                fontWeight: 600,
                 fontSize: 14,
-                letterSpacing: 0.2,
-                paddingBottom: 4,
-                borderBottom: "2px solid transparent",
+                fontWeight: 500,
+                borderLeft: "3px solid transparent",
               }}
             >
               {label}
@@ -52,47 +96,30 @@ export default async function AdminLayout({ children }: { children: ReactNode })
           ))}
         </nav>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <div style={{ textAlign: "right", lineHeight: 1.15 }}>
-            <div style={{ fontSize: 13, fontWeight: 700 }}>
-              {profile.firstName} {profile.lastName}
-            </div>
-            <div
-              style={{
-                fontSize: 11,
-                color: A.gold,
-                letterSpacing: 0.6,
-                textTransform: "uppercase",
-                fontWeight: 700,
-              }}
-            >
-              Admin
-            </div>
-          </div>
-          <form action="/sign-out" method="post">
-            <button
-              type="submit"
-              style={{
-                background: "transparent",
-                color: "#fff",
-                border: "1px solid rgba(255,255,255,0.3)",
-                padding: "8px 14px",
-                borderRadius: 4,
-                fontFamily: A.fontBody,
-                fontWeight: 700,
-                fontSize: 12,
-                letterSpacing: 0.6,
-                textTransform: "uppercase",
-                cursor: "pointer",
-              }}
-            >
-              Sign out
-            </button>
-          </form>
-        </div>
-      </header>
+        <form action="/sign-out" method="post" style={{ padding: "12px 20px" }}>
+          <button
+            type="submit"
+            style={{
+              width: "100%",
+              background: "transparent",
+              border: "1px solid rgba(255,255,255,0.2)",
+              color: "#fff",
+              padding: "10px 12px",
+              borderRadius: 4,
+              fontFamily: A.fontBody,
+              fontWeight: 700,
+              fontSize: 12,
+              letterSpacing: 0.5,
+              textTransform: "uppercase",
+              cursor: "pointer",
+            }}
+          >
+            Sign out
+          </button>
+        </form>
+      </aside>
 
-      <main style={{ padding: "48px 32px 80px" }}>{children}</main>
+      <main style={{ padding: "40px 48px 80px" }}>{children}</main>
     </div>
   );
 }
