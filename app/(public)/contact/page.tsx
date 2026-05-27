@@ -1,16 +1,16 @@
 "use client";
 
 import { motion } from "motion/react";
-import { A, aBase } from "../components/tokens";
-import { PHOTOS } from "../components/photos";
-import { Nav } from "../components/Nav";
-import { Footer } from "../components/Footer";
-import { PageHero } from "../components/PageHero";
-import { SectionLabel } from "../components/SectionLabel";
-import { Button } from "../components/Button";
-import { Reveal } from "../components/motion/Reveal";
-import { Stagger, StaggerItem } from "../components/motion/Stagger";
-import { useLang } from "../i18n/LanguageProvider";
+import { A, aBase } from "@/app/components/tokens";
+import { PHOTOS } from "@/app/components/photos";
+import { Nav } from "@/app/components/Nav";
+import { Footer } from "@/app/components/Footer";
+import { PageHero } from "@/app/components/PageHero";
+import { SectionLabel } from "@/app/components/SectionLabel";
+import { Button } from "@/app/components/Button";
+import { Reveal } from "@/app/components/motion/Reveal";
+import { Stagger, StaggerItem } from "@/app/components/motion/Stagger";
+import { useLang } from "@/app/i18n/LanguageProvider";
 
 const slots = ["Thu 11:00am", "Thu 2:30pm", "Fri 10:00am", "Fri 1:00pm", "Mon 9:30am", "Mon 4:00pm"];
 

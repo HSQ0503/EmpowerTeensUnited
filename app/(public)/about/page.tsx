@@ -1,17 +1,17 @@
 "use client";
 
-import { A, aBase } from "../components/tokens";
-import { PHOTOS } from "../components/photos";
-import { Nav } from "../components/Nav";
-import { Footer } from "../components/Footer";
-import { PageHero } from "../components/PageHero";
-import { ConcentricArcs } from "../components/ConcentricArcs";
-import { SectionLabel } from "../components/SectionLabel";
-import { Reveal } from "../components/motion/Reveal";
-import { Stagger, StaggerItem } from "../components/motion/Stagger";
-import { ZoomImage } from "../components/motion/ZoomImage";
-import { HoverCard } from "../components/motion/HoverCard";
-import { useLang } from "../i18n/LanguageProvider";
+import { A, aBase } from "@/app/components/tokens";
+import { PHOTOS } from "@/app/components/photos";
+import { Nav } from "@/app/components/Nav";
+import { Footer } from "@/app/components/Footer";
+import { PageHero } from "@/app/components/PageHero";
+import { ConcentricArcs } from "@/app/components/ConcentricArcs";
+import { SectionLabel } from "@/app/components/SectionLabel";
+import { Reveal } from "@/app/components/motion/Reveal";
+import { Stagger, StaggerItem } from "@/app/components/motion/Stagger";
+import { ZoomImage } from "@/app/components/motion/ZoomImage";
+import { HoverCard } from "@/app/components/motion/HoverCard";
+import { useLang } from "@/app/i18n/LanguageProvider";
 
 export default function About() {
   const { t } = useLang();

@@ -1,16 +1,16 @@
 "use client";
 
 import { motion } from "motion/react";
-import { A, aBase } from "../components/tokens";
-import { PHOTOS } from "../components/photos";
-import { Nav } from "../components/Nav";
-import { Footer } from "../components/Footer";
-import { PageHero } from "../components/PageHero";
-import { Reveal } from "../components/motion/Reveal";
-import { Stagger, StaggerItem } from "../components/motion/Stagger";
-import { HoverCard } from "../components/motion/HoverCard";
-import { ZoomImage } from "../components/motion/ZoomImage";
-import { useLang } from "../i18n/LanguageProvider";
+import { A, aBase } from "@/app/components/tokens";
+import { PHOTOS } from "@/app/components/photos";
+import { Nav } from "@/app/components/Nav";
+import { Footer } from "@/app/components/Footer";
+import { PageHero } from "@/app/components/PageHero";
+import { Reveal } from "@/app/components/motion/Reveal";
+import { Stagger, StaggerItem } from "@/app/components/motion/Stagger";
+import { HoverCard } from "@/app/components/motion/HoverCard";
+import { ZoomImage } from "@/app/components/motion/ZoomImage";
+import { useLang } from "@/app/i18n/LanguageProvider";
 
 const courses = [
   { t: "One-on-One Mentorship", d: "Personalized guidance from high-achieving students who have navigated advanced classes and academic pathways.", img: PHOTOS.mentoring, cat: "Members", dur: "10 wks", lessons: 1, students: 21, slug: "one-on-one-mentorship" },

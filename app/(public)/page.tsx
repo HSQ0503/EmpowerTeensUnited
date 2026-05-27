@@ -2,19 +2,19 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { A, aBase } from "./components/tokens";
-import { PHOTOS } from "./components/photos";
-import { Nav } from "./components/Nav";
-import { Footer } from "./components/Footer";
-import { ConcentricArcs } from "./components/ConcentricArcs";
-import { SectionLabel } from "./components/SectionLabel";
-import { Button } from "./components/Button";
-import { HomeHero } from "./components/HomeHero";
-import { Reveal } from "./components/motion/Reveal";
-import { Stagger, StaggerItem } from "./components/motion/Stagger";
-import { HoverCard } from "./components/motion/HoverCard";
-import { ZoomImage } from "./components/motion/ZoomImage";
-import { useLang } from "./i18n/LanguageProvider";
+import { A, aBase } from "@/app/components/tokens";
+import { PHOTOS } from "@/app/components/photos";
+import { Nav } from "@/app/components/Nav";
+import { Footer } from "@/app/components/Footer";
+import { ConcentricArcs } from "@/app/components/ConcentricArcs";
+import { SectionLabel } from "@/app/components/SectionLabel";
+import { Button } from "@/app/components/Button";
+import { HomeHero } from "@/app/components/HomeHero";
+import { Reveal } from "@/app/components/motion/Reveal";
+import { Stagger, StaggerItem } from "@/app/components/motion/Stagger";
+import { HoverCard } from "@/app/components/motion/HoverCard";
+import { ZoomImage } from "@/app/components/motion/ZoomImage";
+import { useLang } from "@/app/i18n/LanguageProvider";
 
 const easeOutExpo = [0.16, 1, 0.3, 1] as const;
 

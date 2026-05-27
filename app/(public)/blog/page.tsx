@@ -1,16 +1,16 @@
 "use client";
 
 import { motion } from "motion/react";
-import { A, aBase } from "../components/tokens";
-import { PHOTOS } from "../components/photos";
-import { Nav } from "../components/Nav";
-import { Footer } from "../components/Footer";
-import { PageHero } from "../components/PageHero";
-import { Reveal } from "../components/motion/Reveal";
-import { Stagger, StaggerItem } from "../components/motion/Stagger";
-import { HoverCard } from "../components/motion/HoverCard";
-import { ZoomImage } from "../components/motion/ZoomImage";
-import { useLang } from "../i18n/LanguageProvider";
+import { A, aBase } from "@/app/components/tokens";
+import { PHOTOS } from "@/app/components/photos";
+import { Nav } from "@/app/components/Nav";
+import { Footer } from "@/app/components/Footer";
+import { PageHero } from "@/app/components/PageHero";
+import { Reveal } from "@/app/components/motion/Reveal";
+import { Stagger, StaggerItem } from "@/app/components/motion/Stagger";
+import { HoverCard } from "@/app/components/motion/HoverCard";
+import { ZoomImage } from "@/app/components/motion/ZoomImage";
+import { useLang } from "@/app/i18n/LanguageProvider";
 
 const posts = [
   { t: "Why we put \"purpose\" before \"résumé\"", cat: "Philosophy", d: "Feb 18, 2026", img: PHOTOS.classroom, excerpt: "A 17-year-old with a clear \"why\" outperforms a 17-year-old with a perfect transcript every time. Here's why we hold the line on purpose-first programming." },
