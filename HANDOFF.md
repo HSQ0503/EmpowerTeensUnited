@@ -26,6 +26,7 @@ These will trip you up if you follow the plan verbatim — Phase 0's implementer
    - Import client from `@/prisma/generated/client/client`, **NOT** `@prisma/client`. The plan's code uses the old path — swap on every import.
    - `datasource db` block in `schema.prisma` has only `provider = "postgresql"`. URL/directUrl live in `prisma.config.ts`.
    - `lib/prisma.ts` uses `PrismaPg` adapter. Don't reinstall stock `PrismaClient`.
+   - **Seed config lives in `prisma.config.ts` under `migrations.seed`, NOT in `package.json` `"prisma"`.** Prisma 7 dropped the package.json hook. Wire it as `migrations: { seed: "tsx prisma/seed.ts" }`. `prisma/seed.ts` must `loadEnv({ path: ".env.local" })` itself and instantiate `PrismaClient` with `PrismaPg` against `DIRECT_URL` (same pattern as `lib/prisma.ts`).
 
 2. **Next.js 16**, not 14/15.
    - File is `proxy.ts` at project root, NOT `middleware.ts`.
