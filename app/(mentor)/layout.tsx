@@ -7,7 +7,10 @@ import { A } from "@/app/components/tokens";
 export default async function MentorLayout({ children }: { children: ReactNode }) {
   const { profile } = await requireRole("mentor");
 
-  const navLinks: Array<[string, string]> = [["Students", "/mentor"]];
+  const navLinks: Array<[string, string]> = [
+    ["Students", "/mentor"],
+    ["Profile", "/mentor/profile"],
+  ];
 
   return (
     <div
