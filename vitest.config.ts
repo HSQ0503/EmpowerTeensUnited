@@ -9,8 +9,16 @@ export default defineConfig({
     globals: true,
     include: ["tests/**/*.test.ts", "tests/**/*.test.tsx"],
     setupFiles: [],
+    server: {
+      deps: {
+        inline: ["server-only"],
+      },
+    },
   },
   resolve: {
-    alias: { "@": path.resolve(__dirname, "./") },
+    alias: {
+      "@": path.resolve(__dirname, "./"),
+      "server-only": path.resolve(__dirname, "./tests/__mocks__/server-only.ts"),
+    },
   },
 });
