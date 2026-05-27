@@ -1,14 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { A } from "./tokens";
 import { EtuLockup } from "./Logo";
 import { LangToggle } from "./LangToggle";
 import { useLang } from "../i18n/LanguageProvider";
 
-export function Nav({ active = "home" }: { active?: string }) {
+function isActive(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(href + "/");
+}
+
+export function Nav() {
   const { t } = useLang();
+  const pathname = usePathname();
   const items: Array<[string, string, string]> = [
     ["home", t.nav.home, "/"],
     ["about", t.nav.about, "/about"],
@@ -71,13 +78,13 @@ export function Nav({ active = "home" }: { active?: string }) {
           }}
         >
           {items.map(([key, label, href]) => {
-            const isActive = active === key;
+            const active = isActive(pathname, href);
             return (
               <Link
                 key={key}
                 href={href}
                 style={{
-                  color: isActive ? A.navy : fg,
+                  color: active ? A.navy : fg,
                   textDecoration: "none",
                   position: "relative",
                   paddingBottom: 6,
@@ -88,9 +95,9 @@ export function Nav({ active = "home" }: { active?: string }) {
                 <span style={{ position: "relative", display: "inline-block" }}>
                   {label}
                   <motion.span
-                    layoutId={isActive ? "active-underline" : undefined}
+                    layoutId={active ? "active-underline" : undefined}
                     initial={false}
-                    animate={{ scaleX: isActive ? 1 : 0 }}
+                    animate={{ scaleX: active ? 1 : 0 }}
                     whileHover={{ scaleX: 1 }}
                     transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                     style={{
@@ -151,7 +158,7 @@ export function Nav({ active = "home" }: { active?: string }) {
           </motion.span>
           <motion.span style={{ display: "inline-block" }} whileHover={{ y: -2, background: "rgba(15,69,102,0.05)" }} whileTap={{ scale: 0.96 }} transition={{ type: "spring", stiffness: 360, damping: 22 }}>
             <Link
-              href="/profile"
+              href="/sign-in"
               style={{
                 display: "inline-block",
                 background: "transparent",
@@ -165,7 +172,7 @@ export function Nav({ active = "home" }: { active?: string }) {
                 textDecoration: "none",
               }}
             >
-              {active === "profile" ? t.nav.myProfile : t.nav.signIn}
+              {t.nav.signIn}
             </Link>
           </motion.span>
         </div>
