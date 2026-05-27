@@ -2,7 +2,7 @@
 
 **Goal:** Replace the WordPress site for Empower Teens United with a custom Next.js platform. Friday demo: **2026-05-29 at 1pm with Ivan at Starbucks**.
 
-**Current state:** Phases 0–5 + 6a DONE on `master`. **Next up: Phase 6b** (role landing dashboards), then 7 (broadcast email), 8 (deploy + demo seed). Run `git log --oneline` for the latest commits.
+**Current state:** Phases 0–5, 6a, and 7 DONE on `master` (6b skipped — still pending). **Next up: Phase 6b** (role landing dashboards) and Phase 8 (deploy + demo seed). Run `git log --oneline` for the latest commits.
 
 ---
 
@@ -121,11 +121,18 @@ Shared infra introduced: `app/components/FormRenderer.tsx` + `app/components/For
 - Mentor nav (`app/(mentor)/layout.tsx`) has the Profile link stripped because the page didn't exist yet — restore it once `/mentor/profile` is built in this task.
 - Admin sidebar is fine but `/admin/scan` isn't in the nav — consider adding it (currently only reachable via the funnel page's "Open scanner" pill).
 
-### Phase 7 — Broadcast email (~2h)
-**Plan:** "Phase 7", tasks 7.1 – 7.3.
-**Deliverable:** Tested segment resolver, broadcast composer with audience picker, send pipeline (insert recipients → process via Resend batch send → mark sent), Vercel cron `/api/cron/send-campaign`, Resend webhook `/api/webhooks/resend`, `/unsubscribe?t=<token>` page.
-**Verify:** As admin, send broadcast to "All students" → recipients see email → click unsubscribe → `profiles.email_unsubscribed = true`.
-**Watch out for:** Add `CRON_SECRET=<random>` to `.env.local`. Vercel cron auth — see plan's Step 7.7 note. Resend webhook signing is deferred (set comment, not TODO).
+### ✅ Phase 7 — Broadcast email (DONE)
+`lib/broadcasts/{types,resolve-segment}.ts` + `tests/lib/broadcasts/resolve-segment.test.ts` (10 vitest assertions) ship the segment resolver: all_students/mentors/parents, course_enrollees, event_registrants/attendees/no_shows, and explicit (mix of registrationIds + profileIds). Case-insensitive dedupe; honors `bannedAt` + `emailUnsubscribed`. `emails/BroadcastShell.tsx` wraps the body HTML with the brand header/footer and a per-recipient unsubscribe link.
+
+Admin `/admin/broadcasts` list (status pills mapped over `CampaignStatus`), `/admin/broadcasts/new` (TipTap body, audience picker that prefills via `?segment=event_registrants:<id>` etc. — the link the events funnel already emits), `/admin/broadcasts/[id]` (per-status tally via `groupBy`, last-100 recipients, manual "send next batch" form for unblocking a stuck queue). `createAndSendCampaignAction` resolves recipients, snapshots `EmailRecipient` rows in one nested write, sets the campaign to `sending`, and synchronously drains the first 100-recipient batch so the admin sees immediate progress before redirecting.
+
+`lib/broadcasts/send-batch.ts` renders `BroadcastShell` per recipient with `unsubscribeUrl = ${SITE_URL}/unsubscribe?t=${recipient.id}`, stamps `resendMessageId` on success, and marks sends that throw as `bounced` (the `RecipientStatus` enum has no `failed` — bounced stops the retry loop). When the queue drains to zero, the campaign flips to `sent`. `/api/cron/send-campaign` accepts GET or POST authenticated by `Authorization: Bearer ${CRON_SECRET}` or `?secret=${CRON_SECRET}` (Vercel Cron uses the query form); `proxy.ts` already excludes `/api/cron` and `/api/webhooks` from auth gating.
+
+`/api/webhooks/resend` maps Resend's `email.{delivered,opened,clicked,bounced,complained}` events onto `EmailRecipient.status` by `resendMessageId`. On bounce/complaint it sets `Profile.emailUnsubscribed = true` and adds the address to `UnsubscribedEmail`. **Signature verification is deferred** — a comment marks the wrap point for when `RESEND_WEBHOOK_SECRET` lands on the dashboard. `/unsubscribe?t=<recipientId>` flips the same two columns and renders brand-styled success / unknown-link / missing-token states. 3 commits ending at `ec648fd`.
+
+**Manual setup before sending broadcasts:**
+- Add `CRON_SECRET=<random>` to `.env.local`.
+- Phase 8 will wire `vercel.json` with `{ crons: [{ path: "/api/cron/send-campaign?secret=${CRON_SECRET}", schedule: "* * * * *" }] }` so the queue drains every minute.
 
 ### Phase 8 — Deploy + demo seed (~1h)
 **Plan:** "Phase 8", tasks 8.1 – 8.3.
