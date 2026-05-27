@@ -2,8 +2,7 @@ import "server-only";
 import { redirect, notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { prisma } from "@/lib/prisma";
-import type { Profile } from "@/prisma/generated/client/models";
-import type { Role } from "@/prisma/generated/client/enums";
+import type { Profile, Role } from "@/prisma/generated/client/client";
 
 export type AuthContext = {
   user: { id: string; email: string };
