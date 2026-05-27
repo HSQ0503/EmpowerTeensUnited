@@ -21,7 +21,12 @@ vi.mock("next/navigation", () => ({
 
 import { createClient } from "@/utils/supabase/server";
 import { prisma } from "@/lib/prisma";
-import { getOptionalUser, requireUser, requireRole } from "@/lib/auth";
+import {
+  getOptionalUser,
+  requireUser,
+  requireRole,
+  requireRoleOrRedirect,
+} from "@/lib/auth";
 
 const mockSupabase = (user: any) => ({
   auth: { getUser: vi.fn().mockResolvedValue({ data: { user }, error: null }) },
@@ -100,5 +105,61 @@ describe("requireRole", () => {
       bannedAt: new Date(),
     });
     await expect(requireRole("admin")).rejects.toThrow("REDIRECT:/sign-in?banned=1");
+  });
+});
+
+describe("requireRoleOrRedirect", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("returns when role matches", async () => {
+    (createClient as any).mockResolvedValue(mockSupabase({ id: "u1" }));
+    (prisma.profile.findUnique as any).mockResolvedValue({
+      id: "u1",
+      role: "admin",
+      bannedAt: null,
+    });
+    const r = await requireRoleOrRedirect("admin");
+    expect(r.profile.role).toBe("admin");
+  });
+
+  it("redirects an admin away from /me to /admin", async () => {
+    (createClient as any).mockResolvedValue(mockSupabase({ id: "u1" }));
+    (prisma.profile.findUnique as any).mockResolvedValue({
+      id: "u1",
+      role: "admin",
+      bannedAt: null,
+    });
+    await expect(requireRoleOrRedirect("student")).rejects.toThrow(
+      "REDIRECT:/admin",
+    );
+  });
+
+  it("redirects a student away from /admin to /me", async () => {
+    (createClient as any).mockResolvedValue(mockSupabase({ id: "u1" }));
+    (prisma.profile.findUnique as any).mockResolvedValue({
+      id: "u1",
+      role: "student",
+      bannedAt: null,
+    });
+    await expect(requireRoleOrRedirect("admin")).rejects.toThrow("REDIRECT:/me");
+  });
+
+  it("redirects a mentor away from /admin to /mentor", async () => {
+    (createClient as any).mockResolvedValue(mockSupabase({ id: "u1" }));
+    (prisma.profile.findUnique as any).mockResolvedValue({
+      id: "u1",
+      role: "mentor",
+      bannedAt: null,
+    });
+    await expect(requireRoleOrRedirect("admin")).rejects.toThrow(
+      "REDIRECT:/mentor",
+    );
+  });
+
+  it("falls through to sign-in redirect when anonymous", async () => {
+    (createClient as any).mockResolvedValue(mockSupabase(null));
+    await expect(requireRoleOrRedirect("admin")).rejects.toThrow(
+      "REDIRECT:/sign-in",
+    );
   });
 });

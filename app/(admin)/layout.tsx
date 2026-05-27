@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { requireRole } from "@/lib/auth";
+import { requireRoleOrRedirect } from "@/lib/auth";
 import { EtuLockup } from "@/app/components/Logo";
 import { A } from "@/app/components/tokens";
 
@@ -19,7 +19,7 @@ const NAV: Array<[string, string]> = [
 ];
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
-  const { profile } = await requireRole("admin");
+  const { profile } = await requireRoleOrRedirect("admin");
 
   return (
     <div

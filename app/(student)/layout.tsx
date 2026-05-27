@@ -1,11 +1,11 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { requireRole } from "@/lib/auth";
+import { requireRoleOrRedirect } from "@/lib/auth";
 import { EtuLockup } from "@/app/components/Logo";
 import { A } from "@/app/components/tokens";
 
 export default async function StudentLayout({ children }: { children: ReactNode }) {
-  const { profile } = await requireRole("student");
+  const { profile } = await requireRoleOrRedirect("student");
 
   const navLinks: Array<[string, string]> = [
     ["Dashboard", "/me"],
