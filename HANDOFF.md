@@ -69,23 +69,22 @@ Each row: **plan section**, **deliverable**, **how to verify**, **rough size**.
 ### ✅ Phase 0 — Foundation (DONE)
 Supabase clients, Prisma 7 schema + migrations, `handle_new_user` trigger, `lib/auth.ts` (tested), `proxy.ts`, Tailwind tokens, shadcn base. 7 commits on master ending at `424fcb1`.
 
-### Phase 1 — Public site reorg (~1h)
-**Plan:** "Phase 1 — Public site polish", tasks 1.1 – 1.5.
-**Deliverable:** All public pages moved under `app/(public)/`, Nav/Footer hoisted into `(public)/layout.tsx`, active-nav follows current route, logo dropped in, `site_settings` seeded.
-**Verify:** `npm run dev` → visit `/`, `/about`, `/blog`, `/courses`, `/events`, `/contact`. All render. Active nav underline follows route.
-**Watch out for:** PowerShell `Move-Item` for the file moves (plan uses these). Update each moved file's imports from `./components/...` to `@/app/components/...`. Phase 1.5 needs `npm install --save-dev tsx` and a `prisma.seed` entry in package.json.
+### ✅ Phase 1 — Public site reorg (DONE)
+Public pages moved into `app/(public)/`, Nav/Footer hoisted into `(public)/layout.tsx`, Nav uses `usePathname` for active state, `site_settings` seeded. 4 commits ending at `f3dbaa0`. Logo (Task 1.3) skipped — `public/logo.svg` not delivered yet; drop one in and update `EtuLockup` per plan when received.
 
-### Phase 2a — Auth pages (~1h)
-**Plan:** tasks 2.1 (sign-in), 2.2 (sign-up + verify), 2.3 (forgot/reset).
-**Deliverable:** `/sign-in`, `/sign-up`, `/sign-up/verify`, `/forgot-password`, `/reset-password` all work.
-**Verify:** Sign up a fake student → verification email arrives in inbox → click link → land on `/me` (will 404, that's fine for now).
-**Watch out for:** Supabase dashboard → Authentication → URL Configuration must list `http://localhost:3000/sign-up/verify` and `/reset-password` as allowed redirects. Set Site URL to `http://localhost:3000`.
+### ✅ Phase 2 — Auth (DONE)
+All of 2a + 2b shipped. `/sign-in`, `/sign-up`, `/sign-up/verify`, `/forgot-password`, `/reset-password`, `/sign-out`, `/invite/[token]`, `/me/profile`, `/admin/invitations`. Brand-styled `app/(auth)/_styles.ts` shared across every auth surface (also reused by the student/admin profile/invitations forms). Stub `app/(admin)/layout.tsx` exists and will be **replaced** by the full sidebar version in Task 3.5. First transactional email (`emails/InviteEmail.tsx` + `lib/email/transactional.ts`) plus `emails/_components/Brand.tsx` shared header/footer for all future templates. 7 commits ending at `44feab0`.
 
-### Phase 2b — Invite + profile + sign-out (~1h)
-**Plan:** tasks 2.4 (sign-out), 2.5 (invite accept), 2.6 (student profile edit), 2.7 (admin invitations CRUD).
-**Deliverable:** Admin can send mentor/admin invites, recipient accepts, lands on `/mentor` or `/admin`. Student can edit profile. Anyone can sign out.
-**Verify:** Manually set one profile to `role='admin'` via Supabase SQL editor (`UPDATE profiles SET role='admin' WHERE email='your-email';`). Sign in, send a mentor invite to a second test email, accept, sign in as mentor.
-**Watch out for:** Task 2.7 references `app/(admin)/layout.tsx` which is built in Phase 3a's Task 3.5. Two options: (a) build a stub admin layout here that just does `requireRole("admin")`, (b) defer Task 2.7 to Phase 3a. Recommend (a) — stub it.
+**Manual one-time setup needed before flows work end-to-end:**
+- Supabase dashboard → **Authentication → URL Configuration**:
+  - Site URL: `http://localhost:3000`
+  - Allowed redirect URLs: `http://localhost:3000/sign-up/verify`, `http://localhost:3000/reset-password`
+- `.env.local`: add `NEXT_PUBLIC_SITE_URL=http://localhost:3000` (already done locally; future env files need it too).
+- To test admin features, promote one profile via Supabase SQL editor:
+  ```sql
+  UPDATE profiles SET role='admin' WHERE email='your-email';
+  ```
+- Dashboards at `/me`, `/mentor`, `/admin` index routes don't exist yet — they 404 after sign-in until Task 6.5. `/me/profile` and `/admin/invitations` do work today.
 
 ### Phase 3a — Events public + registration (~1.5h)
 **Plan:** tasks 3.1, 3.2, 3.3, 3.4.
