@@ -9,9 +9,10 @@ export default async function StudentLayout({ children }: { children: ReactNode 
 
   const navLinks: Array<[string, string]> = [
     ["Dashboard", "/me"],
-    ["Profile", "/me/profile"],
+    ["Courses", "/courses"],
     ["Events", "/me/events"],
     ["Mentorship", "/me/mentorship"],
+    ["Profile", "/me/profile"],
   ];
 
   return (
