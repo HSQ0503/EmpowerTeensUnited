@@ -86,23 +86,14 @@ All of 2a + 2b shipped. `/sign-in`, `/sign-up`, `/sign-up/verify`, `/forgot-pass
   ```
 - Dashboards at `/me`, `/mentor`, `/admin` index routes don't exist yet — they 404 after sign-in until Task 6.5. `/me/profile` and `/admin/invitations` do work today.
 
-### Phase 3a — Events public + registration (~1.5h)
-**Plan:** tasks 3.1, 3.2, 3.3, 3.4.
-**Deliverable:** `/events` and `/events/[slug]` DB-backed, registration form, server action creates registration with QR token, Resend confirmation email with embedded QR, `/me/events` shows my registrations.
-**Verify:** Seed an event via SQL, register for it, confirmation email arrives with QR. Check `/me/events` shows it.
-**Watch out for:** `lib/email/transactional.ts` will gain more helpers in later phases — design the file to grow cleanly. The QR encodes a URL pointing to `NEXT_PUBLIC_SITE_URL/api/scan?t=<token>` — that endpoint doesn't exist yet (built in 3c), so the QR is dead-ended until then.
+### ✅ Phase 3a — Events public + registration (DONE)
+Public `/events` list + `/events/[slug]` detail are DB-backed (Prisma `event.findMany` / `findUnique`, scoped to `publishedAt != null && archivedAt == null && startsAt >= now`). `lib/dates.ts` holds the date formatters. Registration: `/events/[slug]/register` form prefills from the signed-in profile, `actions.ts` creates the `EventRegistration` (auto-generates `qrToken` via Prisma default) and enforces capacity including guest count, then redirects to `/done`. `RegistrationConfirmation` react-email template sends through `lib/email/transactional.ts:sendRegistrationConfirmation` with an embedded PNG QR from `lib/qr.ts`. `/me/events` lists the student's registrations with per-row QR + check-in badge. 4 commits ending at `8a00c53`.
 
-### Phase 3b — Admin events CRUD + funnel (~1h)
-**Plan:** tasks 3.5, 3.6. (Task 3.5 also defines `app/(admin)/layout.tsx` — the admin shell with sidebar.)
-**Deliverable:** Admin events list, new/edit pages, funnel page with conversion stats + CSV export + "email registrants/no-shows" buttons that route to `/admin/broadcasts/new?segment=...`.
-**Verify:** Sign in as admin → `/admin/events` → create event → publish → register as a different user → funnel page shows the registration.
-**Watch out for:** If Phase 2b stubbed `(admin)/layout.tsx`, replace it with the full sidebar version from Task 3.5.
+### ✅ Phase 3b — Admin events CRUD + funnel (DONE)
+`app/(admin)/layout.tsx` rewritten from Phase 2 stub into the full 240px sidebar shell (11 sections, sticky aside, EtuLockup, sign-out at the bottom). Events CRUD at `/admin/events`, `/admin/events/new`, `/admin/events/[id]/edit` — new + edit share `_form.tsx`. `actions.ts` (`createEventAction`, `updateEventAction`, `archiveEventAction`) derives slug from title when blank and revalidates `/events`. Funnel at `/admin/events/[id]/registrations`: 4 stat cards (Registered / Guests / Checked-in / Conversion), action pills (CSV export, future broadcast targeting `/admin/broadcasts/new?segment=event_registrants:<id>`, "Open scanner"), and the registrations table. CSV streams via `/registrations/export/route.ts` using `lib/csv.ts`. 2 commits ending at `cd5a6f7`.
 
-### Phase 3c — QR scan (~30min)
-**Plan:** task 3.7.
-**Deliverable:** `/api/scan?t=<token>` records check-in idempotently and returns a styled HTML confirmation page. `/admin/scan` opens the device camera (html5-qrcode) for staff to scan attendee QR codes.
-**Verify:** Open the registration email's QR on phone → scan with another phone signed in as admin via `/admin/scan` → check-in recorded → refresh funnel page, conversion ticks up.
-**Watch out for:** Mobile camera APIs need HTTPS in production. On localhost it works without TLS. For demo on Vercel preview, also works (HTTPS automatic).
+### ✅ Phase 3c — QR scan (DONE)
+`/api/scan?t=<token>` looks up the registration, idempotently creates an `EventCheckin` (skips when one already exists), and returns a brand-styled HTML confirmation page (✓ checked in / ↻ already checked in / ? unknown QR / ! missing token / 403 wrong role). Unauthenticated callers redirect through `/sign-in?next=…` preserving the scan URL. `/admin/scan` dynamic-imports `html5-qrcode` (added to deps) and decodes via the rear camera, navigating to the decoded URL on hit. 1 commit at `43e8887`. **Reminder:** mobile camera APIs need HTTPS in production — works on localhost without TLS and on Vercel previews (HTTPS automatic).
 
 ### Phase 4 — Courses + weekly reflection (~2h)
 **Plan:** "Phase 4", tasks 4.1 – 4.4.
