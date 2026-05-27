@@ -2,7 +2,7 @@
 
 **Goal:** Replace the WordPress site for Empower Teens United with a custom Next.js platform. Friday demo: **2026-05-29 at 1pm with Ivan at Starbucks**.
 
-**Current state:** Phases 0–5, 6a, 7, and 8 DONE on `master` (6b skipped — still pending). **Only Phase 6b remains in code** (role landing dashboards `/me`, `/mentor/profile`, `/admin`). After 6b, push to Vercel and run the dry-run demo flow. Run `git log --oneline` for the latest commits.
+**Current state:** Phases 0–8 DONE on `master`. **All implementation work is complete.** Next step is the Vercel deploy + Friday demo dry-run — see Phase 8 manual setup checklist below. Run `git log --oneline` for the latest commits.
 
 ---
 
@@ -112,14 +112,12 @@ Shared infra introduced: `app/components/FormRenderer.tsx` + `app/components/For
 
 **Gotcha kept:** modern Resend SDK uses camelCase `replyTo` — the plan's `reply_to` would type-error. About is split into `page.tsx` (server) + `_AboutClient.tsx` (client) because the existing motion/`useLang` shell can't call Prisma directly; same pattern applies to any "use client" public page that needs DB data — wrap, don't rewrite.
 
-### Phase 6b — Role landing dashboards (~30min)
-**Plan:** task 6.5.
-**Deliverable:** `app/(student)/me/page.tsx`, `app/(mentor)/mentor/profile/page.tsx`, `app/(admin)/admin/page.tsx`.
-**Verify:** Each role signs in and lands on a real dashboard with stats, links, sign-out button.
-**While you're in there — open gaps to close:**
-- Student nav (`app/(student)/layout.tsx`) is missing a "Courses" link. `/me` dashboard should surface active enrollments (resolves the gap noted in Phase 4's handoff).
-- Mentor nav (`app/(mentor)/layout.tsx`) has the Profile link stripped because the page didn't exist yet — restore it once `/mentor/profile` is built in this task.
-- Admin sidebar is fine but `/admin/scan` isn't in the nav — consider adding it (currently only reachable via the funnel page's "Open scanner" pill).
+### ✅ Phase 6b — Role landing dashboards (DONE)
+Student `/me` is a 2-column dashboard: navy gradient hero with time-of-day greeting + 4 summary pills (mentor / intake / active-courses / upcoming-events), then **Continue learning** (per-enrollment progress bars driven by `responses.submittedAt vs course.weeks`), **Upcoming events** (date block + check-in pill), **Mentorship** (mentor contact + intake/HS plan status rows), **Profile snapshot**, and a **Quick links** rail. All five user-facing CTAs route to existing pages. Student layout nav now includes Courses (pointing at the public catalog so they can enroll).
+
+Mentor `/mentor/profile` is the editor for firstName/lastName/phone/title/bio that mirrors the student profile editor's brand chrome; revalidates both `/mentor/profile` and `/mentor` so the layout's display name and "currently mentoring N students" chip stay fresh. The Profile link is restored in `(mentor)/layout.tsx` nav now that the page exists.
+
+Admin `/admin` is hero + 4-card KPI row (today's check-ins, week registrations, active enrollments, pending invites — backed by `Promise.all` across 11 counts), Action Items (unanswered messages, unpaired students, draft broadcasts, sending campaigns — each tone-coded based on count), Quick Actions (create event, send broadcast, invite mentor, open scanner), and a 3-column activity feed (upcoming events, recent registrations, recent messages) — each row deep-links into the relevant admin surface. 3 commits ending at `54c0d78`.
 
 ### ✅ Phase 7 — Broadcast email (DONE)
 `lib/broadcasts/{types,resolve-segment}.ts` + `tests/lib/broadcasts/resolve-segment.test.ts` (10 vitest assertions) ship the segment resolver: all_students/mentors/parents, course_enrollees, event_registrants/attendees/no_shows, and explicit (mix of registrationIds + profileIds). Case-insensitive dedupe; honors `bannedAt` + `emailUnsubscribed`. `emails/BroadcastShell.tsx` wraps the body HTML with the brand header/footer and a per-recipient unsubscribe link.
