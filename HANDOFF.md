@@ -2,7 +2,7 @@
 
 **Goal:** Replace the WordPress site for Empower Teens United with a custom Next.js platform. Friday demo: **2026-05-29 at 1pm with Ivan at Starbucks**.
 
-**Current state:** Phases 0–5 DONE on `master`. **Next up: Phase 6a** (blog + contact + team) then 6b (role landing dashboards), 7 (broadcast email), 8 (deploy + demo seed). Run `git log --oneline` for the latest commits.
+**Current state:** Phases 0–5 + 6a DONE on `master`. **Next up: Phase 6b** (role landing dashboards), then 7 (broadcast email), 8 (deploy + demo seed). Run `git log --oneline` for the latest commits.
 
 ---
 
@@ -107,16 +107,10 @@ Shared infra introduced: `app/components/FormRenderer.tsx` + `app/components/For
 
 **Critical gotcha kept**: `MentorshipForm` has `@@unique([studentId, kind, sessionNo])`. Postgres treats NULL as distinct, so an `upsert` on that key with `sessionNo: null` would always insert. `submitOnceOnlyForm` in `app/(student)/me/mentorship/actions.ts` does `findFirst({ where: { sessionNo: null } })` → `update` or `create`. Mirror that pattern for any future once-only form.
 
-### Phase 6a — Blog + contact + team (~1h)
-**Plan:** tasks 6.1, 6.2, 6.3, 6.4.
-**Deliverable:** TipTap rich-text editor component, blog CRUD with editor, contact form public + admin inbox + email notifications, team CRUD + DB-backed about page.
-**Verify:** Create a blog post with bold/headings/list → publish → see it on public `/blog`. Submit contact form → autoreply arrives → Ivan gets notification. Add team member → about page shows them.
-**Watch out for:**
-- TipTap is a client component — wrap with `"use client"`. Output stored as HTML string in DB and rendered with `dangerouslySetInnerHTML` on public pages. The plan's TipTap setup uses `immediatelyRender: false` (required for SSR safety).
-- Existing `/blog`, `/contact`, `/about` pages are heavily styled but use hardcoded data (same pattern as the original `/events`, `/courses`). Don't throw the design away — adapt: keep `PageHero` + brand tokens, replace the data layer with Prisma. See `(public)/events/page.tsx` and `(public)/courses/page.tsx` for the working pattern.
-- Reusable infra to lean on: `app/(admin)/admin/events/_form.tsx` and `_metadata-form.tsx` show the brand-styled CRUD form pattern. `app/components/FormRenderer.tsx` handles short/long/select questions if you need it for contact. Brand-styled table + status-pill markup lives in `(admin)/admin/events/page.tsx`. The "Danger zone" archive block in `events/[id]/edit/page.tsx` is the canonical destructive-action pattern.
-- Email helper grows: `lib/email/transactional.ts` already has `sendInviteEmail` and `sendRegistrationConfirmation`. Add `sendContactAutoreply` and `sendContactAdminNotice` alongside, sharing `emails/_components/Brand.tsx`.
-- Public `/blog`, `/about` should be server components reading from Prisma. Their existing `"use client"` + `useLang` shells need to be replaced (we did this for events/courses). Hardcoded English copy is fine for the demo.
+### ✅ Phase 6a — Blog + contact + team (DONE)
+`components/RichTextEditor.tsx` is a TipTap client editor (`immediatelyRender:false`, bold/italic/H2/H3/lists/blockquote/link/image) that emits HTML through a hidden `<input name={name}>` so it composes with existing server-action forms. Public `/blog` + `/blog/[slug]` are Prisma-backed server components retaining the `PageHero` brand chrome; `/admin/blog` mirrors the events table (status pill, danger-zone archive) and `_form.tsx` shares the editor between new/edit. `/contact` is a brand-styled server-action form that writes `ContactMessage` and fans out `sendContactAdminNotice` + `sendContactAutoreply` (both new react-email templates sharing `emails/_components/Brand.tsx`). `ETU_TEAM_INBOX` overrides the default `info@empowerteensunited.org`. Admin inbox at `/admin/contact` lists messages with status pills; `/admin/contact/[id]` is the per-message detail with `Mark replied / Archive / Re-open` form actions and a `mailto:` reply button. `/admin/team` is a single-page CRUD (add form + inline edit/delete per row). `/about` was split into a server `page.tsx` (Prisma `teamMember.findMany({ published, orderBy: sortOrder })`) and `_AboutClient.tsx` (keeps all motion + i18n chrome, renders the team grid from props with a brand-gradient placeholder when `photoUrl` is null). 4 commits ending at `51a7fae`.
+
+**Gotcha kept:** modern Resend SDK uses camelCase `replyTo` — the plan's `reply_to` would type-error. About is split into `page.tsx` (server) + `_AboutClient.tsx` (client) because the existing motion/`useLang` shell can't call Prisma directly; same pattern applies to any "use client" public page that needs DB data — wrap, don't rewrite.
 
 ### Phase 6b — Role landing dashboards (~30min)
 **Plan:** task 6.5.
