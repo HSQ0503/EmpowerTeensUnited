@@ -100,11 +100,11 @@ export function HomeHero() {
 
         <h1
           style={{
-            fontFamily: A.fontHead,
+            fontFamily: A.fontBody,
             fontSize: "clamp(44px, 6.2vw, 78px)",
-            lineHeight: 1.02,
-            fontWeight: 400,
-            letterSpacing: "-0.025em",
+            lineHeight: 1.05,
+            fontWeight: 800,
+            letterSpacing: "-0.03em",
             margin: 0,
             color: "#fff",
           }}
@@ -126,15 +126,14 @@ export function HomeHero() {
             transition={{ duration: 1, ease: easeOutExpo, delay: 0.55 }}
             style={{ display: "block", marginTop: 6 }}
           >
-            <span style={{ color: "rgba(255,255,255,0.94)", fontWeight: 400 }}>
+            <span style={{ color: "#fff", fontWeight: 800 }}>
               {t.home.headLine3prefix}{" "}
             </span>
             <span
               style={{
-                fontStyle: "italic",
                 color: A.gold,
-                fontWeight: 400,
-                letterSpacing: "-0.01em",
+                fontWeight: 800,
+                letterSpacing: "-0.03em",
               }}
             >
               {t.home.headLine3accent}
