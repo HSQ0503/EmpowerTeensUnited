@@ -1,0 +1,382 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  admin
+  mentor
+  student
+}
+
+enum InviteRole {
+  admin
+  mentor
+}
+
+enum RegistrationStatus {
+  registered
+  cancelled
+}
+
+enum EnrollmentStatus {
+  active
+  completed
+  dropped
+}
+
+enum MentorshipFormKind {
+  intake
+  session
+  hs_plan
+}
+
+enum CourseLanguage {
+  en
+  es
+  both
+}
+
+enum CampaignStatus {
+  draft
+  scheduled
+  sending
+  sent
+  failed
+}
+
+enum RecipientStatus {
+  queued
+  sent
+  delivered
+  bounced
+  opened
+  clicked
+  complained
+}
+
+enum ContactStatus {
+  new
+  replied
+  archived
+}
+
+model Profile {
+  id                 String   @id @db.Uuid
+  role               Role     @default(student)
+  firstName          String   @map("first_name")
+  lastName           String   @map("last_name")
+  email              String   @unique
+  phone              String?
+  avatarUrl          String?  @map("avatar_url")
+  grade              Int?
+  school             String?
+  parentEmail        String?  @map("parent_email")
+  parentPhone        String?  @map("parent_phone")
+  title              String?
+  bio                String?
+  emailUnsubscribed  Boolean  @default(false) @map("email_unsubscribed")
+  bannedAt           DateTime? @map("banned_at")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  registrations         EventRegistration[]
+  checkInsRecorded      EventCheckin[]      @relation("CheckedInBy")
+  enrollments           Enrollment[]
+  mentorAssignments     MentorAssignment[]  @relation("MentorOf")
+  studentAssignment     MentorAssignment?   @relation("StudentOf")
+  intakeForms           MentorshipForm[]    @relation("StudentForms")
+  formsAsMentor         MentorshipForm[]    @relation("MentorForms")
+  formsSubmitted        MentorshipForm[]    @relation("SubmittedBy")
+  blogPosts             BlogPost[]
+  campaignsCreated      EmailCampaign[]
+  contactsReplied       ContactMessage[]
+  recipientRows         EmailRecipient[]
+  eventsCreated         Event[]
+  coursesCreated        Course[]
+  invitationsSent       Invitation[]
+
+  @@map("profiles")
+}
+
+model Invitation {
+  id            String    @id @default(uuid()) @db.Uuid
+  email         String
+  role          InviteRole
+  token         String    @unique @default(uuid()) @db.Uuid
+  invitedById   String    @map("invited_by_id") @db.Uuid
+  invitedAt     DateTime  @default(now()) @map("invited_at")
+  expiresAt     DateTime  @map("expires_at")
+  acceptedAt    DateTime? @map("accepted_at")
+  revokedAt     DateTime? @map("revoked_at")
+
+  invitedBy     Profile   @relation(fields: [invitedById], references: [id])
+
+  @@index([email])
+  @@map("invitations")
+}
+
+model Event {
+  id            String    @id @default(uuid()) @db.Uuid
+  slug          String    @unique
+  title         String
+  body          String
+  coverImageUrl String?   @map("cover_image_url")
+  location      String
+  startsAt      DateTime  @map("starts_at")
+  endsAt        DateTime  @map("ends_at")
+  capacity      Int?
+  publishedAt   DateTime? @map("published_at")
+  archivedAt    DateTime? @map("archived_at")
+  createdById   String    @map("created_by_id") @db.Uuid
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  createdBy     Profile   @relation(fields: [createdById], references: [id])
+  registrations EventRegistration[]
+
+  @@map("events")
+}
+
+model EventRegistration {
+  id           String             @id @default(uuid()) @db.Uuid
+  eventId      String             @map("event_id") @db.Uuid
+  profileId    String?            @map("profile_id") @db.Uuid
+  name         String
+  grade        Int?
+  guestCount   Int                @default(0) @map("guest_count")
+  guestNames   String[]           @map("guest_names")
+  email        String
+  phone        String?
+  qrToken      String             @unique @default(uuid()) @map("qr_token") @db.Uuid
+  status       RegistrationStatus @default(registered)
+  registeredAt DateTime           @default(now()) @map("registered_at")
+
+  event        Event              @relation(fields: [eventId], references: [id])
+  profile      Profile?           @relation(fields: [profileId], references: [id])
+  checkin      EventCheckin?
+
+  @@index([eventId])
+  @@index([profileId])
+  @@map("event_registrations")
+}
+
+model EventCheckin {
+  id              String  @id @default(uuid()) @db.Uuid
+  registrationId  String  @unique @map("registration_id") @db.Uuid
+  checkedInAt     DateTime @default(now()) @map("checked_in_at")
+  checkedInById   String  @map("checked_in_by_id") @db.Uuid
+
+  registration    EventRegistration @relation(fields: [registrationId], references: [id])
+  checkedInBy     Profile @relation("CheckedInBy", fields: [checkedInById], references: [id])
+
+  @@map("event_checkins")
+}
+
+model Course {
+  id            String         @id @default(uuid()) @db.Uuid
+  slug          String         @unique
+  title         String
+  body          String
+  coverImageUrl String?        @map("cover_image_url")
+  startsOn      DateTime       @map("starts_on") @db.Date
+  weeks         Int
+  location      String
+  ageMin        Int            @default(14) @map("age_min")
+  ageMax        Int            @default(18) @map("age_max")
+  language      CourseLanguage @default(en)
+  cohortCap     Int?           @map("cohort_cap")
+  certificate   Boolean        @default(true)
+  publishedAt   DateTime?      @map("published_at")
+  archivedAt    DateTime?      @map("archived_at")
+  createdById   String         @map("created_by_id") @db.Uuid
+  createdAt     DateTime       @default(now()) @map("created_at")
+
+  createdBy     Profile        @relation(fields: [createdById], references: [id])
+  courseWeeks   CourseWeek[]
+  enrollments   Enrollment[]
+
+  @@map("courses")
+}
+
+model CourseWeek {
+  id        String @id @default(uuid()) @db.Uuid
+  courseId  String @map("course_id") @db.Uuid
+  weekNo    Int    @map("week_no")
+  title     String
+  body      String
+  questions Json   @default("[]")
+
+  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  responses LessonResponse[]
+
+  @@unique([courseId, weekNo])
+  @@map("course_weeks")
+}
+
+model Enrollment {
+  id           String           @id @default(uuid()) @db.Uuid
+  courseId     String           @map("course_id") @db.Uuid
+  profileId    String           @map("profile_id") @db.Uuid
+  status       EnrollmentStatus @default(active)
+  enrolledAt   DateTime         @default(now()) @map("enrolled_at")
+
+  course       Course           @relation(fields: [courseId], references: [id])
+  profile      Profile          @relation(fields: [profileId], references: [id])
+  responses    LessonResponse[]
+
+  @@unique([courseId, profileId])
+  @@map("enrollments")
+}
+
+model LessonResponse {
+  id            String   @id @default(uuid()) @db.Uuid
+  enrollmentId  String   @map("enrollment_id") @db.Uuid
+  weekId        String   @map("week_id") @db.Uuid
+  answers       Json     @default("{}")
+  submittedAt   DateTime? @map("submitted_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
+  week          CourseWeek @relation(fields: [weekId], references: [id])
+
+  @@unique([enrollmentId, weekId])
+  @@map("lesson_responses")
+}
+
+model MentorAssignment {
+  id         String    @id @default(uuid()) @db.Uuid
+  mentorId   String    @map("mentor_id") @db.Uuid
+  studentId  String    @unique @map("student_id") @db.Uuid
+  startedAt  DateTime  @default(now()) @map("started_at")
+  endedAt    DateTime? @map("ended_at")
+  notes      String?
+
+  mentor     Profile   @relation("MentorOf", fields: [mentorId], references: [id])
+  student    Profile   @relation("StudentOf", fields: [studentId], references: [id])
+
+  @@map("mentor_assignments")
+}
+
+model MentorshipForm {
+  id              String              @id @default(uuid()) @db.Uuid
+  studentId       String              @map("student_id") @db.Uuid
+  mentorId        String?             @map("mentor_id") @db.Uuid
+  kind            MentorshipFormKind
+  sessionNo       Int?                @map("session_no")
+  formVersion     Int                 @default(1) @map("form_version")
+  answers         Json                @default("{}")
+  submittedById   String              @map("submitted_by_id") @db.Uuid
+  submittedAt     DateTime?           @map("submitted_at")
+  updatedAt       DateTime            @updatedAt @map("updated_at")
+
+  student         Profile             @relation("StudentForms", fields: [studentId], references: [id])
+  mentor          Profile?            @relation("MentorForms", fields: [mentorId], references: [id])
+  submittedBy     Profile             @relation("SubmittedBy", fields: [submittedById], references: [id])
+
+  @@unique([studentId, kind, sessionNo])
+  @@map("mentorship_forms")
+}
+
+model BlogPost {
+  id            String    @id @default(uuid()) @db.Uuid
+  slug          String    @unique
+  title         String
+  excerpt       String?
+  body          String
+  coverImageUrl String?   @map("cover_image_url")
+  authorId      String    @map("author_id") @db.Uuid
+  publishedAt   DateTime? @map("published_at")
+  archivedAt    DateTime? @map("archived_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  author        Profile   @relation(fields: [authorId], references: [id])
+
+  @@map("blog_posts")
+}
+
+model ContactMessage {
+  id           String        @id @default(uuid()) @db.Uuid
+  name         String
+  email        String
+  phone        String?
+  subject      String
+  message      String
+  status       ContactStatus @default(new)
+  submittedAt  DateTime      @default(now()) @map("submitted_at")
+  repliedAt    DateTime?     @map("replied_at")
+  repliedById  String?       @map("replied_by_id") @db.Uuid
+
+  repliedBy    Profile?      @relation(fields: [repliedById], references: [id])
+
+  @@map("contact_messages")
+}
+
+model TeamMember {
+  id         String  @id @default(uuid()) @db.Uuid
+  fullName   String  @map("full_name")
+  roleTitle  String  @map("role_title")
+  bio        String?
+  photoUrl   String? @map("photo_url")
+  sortOrder  Int     @default(0) @map("sort_order")
+  published  Boolean @default(true)
+
+  @@map("team_members")
+}
+
+model EmailCampaign {
+  id              String         @id @default(uuid()) @db.Uuid
+  subject         String
+  bodyHtml        String         @map("body_html")
+  bodyText        String         @map("body_text")
+  sender          String
+  segmentFilter   Json           @map("segment_filter")
+  status          CampaignStatus @default(draft)
+  scheduledAt     DateTime?      @map("scheduled_at")
+  sentAt          DateTime?      @map("sent_at")
+  recipientCount  Int            @default(0) @map("recipient_count")
+  createdById     String         @map("created_by_id") @db.Uuid
+  createdAt       DateTime       @default(now()) @map("created_at")
+
+  createdBy       Profile        @relation(fields: [createdById], references: [id])
+  recipients      EmailRecipient[]
+
+  @@map("email_campaigns")
+}
+
+model EmailRecipient {
+  id                String          @id @default(uuid()) @db.Uuid
+  campaignId        String          @map("campaign_id") @db.Uuid
+  profileId         String?         @map("profile_id") @db.Uuid
+  email             String
+  name              String?
+  status            RecipientStatus @default(queued)
+  resendMessageId   String?         @map("resend_message_id")
+  sentAt            DateTime?       @map("sent_at")
+  lastEventAt       DateTime?       @map("last_event_at")
+
+  campaign          EmailCampaign   @relation(fields: [campaignId], references: [id])
+  profile           Profile?        @relation(fields: [profileId], references: [id])
+
+  @@index([campaignId])
+  @@index([resendMessageId])
+  @@map("email_recipients")
+}
+
+model UnsubscribedEmail {
+  email          String   @id
+  unsubscribedAt DateTime @default(now()) @map("unsubscribed_at")
+
+  @@map("unsubscribed_emails")
+}
+
+model SiteSetting {
+  key   String @id
+  value Json
+
+  @@map("site_settings")
+}
