@@ -2,7 +2,7 @@
 
 **Goal:** Replace the WordPress site for Empower Teens United with a custom Next.js platform. Friday demo: **2026-05-29 at 1pm with Ivan at Starbucks**.
 
-**Current state:** Phase 0 (foundation) DONE on `master`. ~13 remaining sub-phases ahead. Run `git log --oneline` for the latest.
+**Current state:** Phases 0–5 DONE on `master`. **Next up: Phase 6a** (blog + contact + team) then 6b (role landing dashboards), 7 (broadcast email), 8 (deploy + demo seed). Run `git log --oneline` for the latest commits.
 
 ---
 
@@ -84,7 +84,7 @@ All of 2a + 2b shipped. `/sign-in`, `/sign-up`, `/sign-up/verify`, `/forgot-pass
   ```sql
   UPDATE profiles SET role='admin' WHERE email='your-email';
   ```
-- Dashboards at `/me`, `/mentor`, `/admin` index routes don't exist yet — they 404 after sign-in until Task 6.5. `/me/profile` and `/admin/invitations` do work today.
+- After Phase 5: `/mentor` index exists (mentor's student list). `/me` and `/admin` index routes still 404 after sign-in until Task 6.5 builds the role landing dashboards.
 
 ### ✅ Phase 3a — Events public + registration (DONE)
 Public `/events` list + `/events/[slug]` detail are DB-backed (Prisma `event.findMany` / `findUnique`, scoped to `publishedAt != null && archivedAt == null && startsAt >= now`). `lib/dates.ts` holds the date formatters. Registration: `/events/[slug]/register` form prefills from the signed-in profile, `actions.ts` creates the `EventRegistration` (auto-generates `qrToken` via Prisma default) and enforces capacity including guest count, then redirects to `/done`. `RegistrationConfirmation` react-email template sends through `lib/email/transactional.ts:sendRegistrationConfirmation` with an embedded PNG QR from `lib/qr.ts`. `/me/events` lists the student's registrations with per-row QR + check-in badge. 4 commits ending at `8a00c53`.
@@ -111,12 +111,21 @@ Shared infra introduced: `app/components/FormRenderer.tsx` + `app/components/For
 **Plan:** tasks 6.1, 6.2, 6.3, 6.4.
 **Deliverable:** TipTap rich-text editor component, blog CRUD with editor, contact form public + admin inbox + email notifications, team CRUD + DB-backed about page.
 **Verify:** Create a blog post with bold/headings/list → publish → see it on public `/blog`. Submit contact form → autoreply arrives → Ivan gets notification. Add team member → about page shows them.
-**Watch out for:** TipTap is a client component — wrap with `"use client"`. Output stored as HTML string in DB and rendered with `dangerouslySetInnerHTML` on public pages. The plan's TipTap setup uses `immediatelyRender: false` (required for SSR safety).
+**Watch out for:**
+- TipTap is a client component — wrap with `"use client"`. Output stored as HTML string in DB and rendered with `dangerouslySetInnerHTML` on public pages. The plan's TipTap setup uses `immediatelyRender: false` (required for SSR safety).
+- Existing `/blog`, `/contact`, `/about` pages are heavily styled but use hardcoded data (same pattern as the original `/events`, `/courses`). Don't throw the design away — adapt: keep `PageHero` + brand tokens, replace the data layer with Prisma. See `(public)/events/page.tsx` and `(public)/courses/page.tsx` for the working pattern.
+- Reusable infra to lean on: `app/(admin)/admin/events/_form.tsx` and `_metadata-form.tsx` show the brand-styled CRUD form pattern. `app/components/FormRenderer.tsx` handles short/long/select questions if you need it for contact. Brand-styled table + status-pill markup lives in `(admin)/admin/events/page.tsx`. The "Danger zone" archive block in `events/[id]/edit/page.tsx` is the canonical destructive-action pattern.
+- Email helper grows: `lib/email/transactional.ts` already has `sendInviteEmail` and `sendRegistrationConfirmation`. Add `sendContactAutoreply` and `sendContactAdminNotice` alongside, sharing `emails/_components/Brand.tsx`.
+- Public `/blog`, `/about` should be server components reading from Prisma. Their existing `"use client"` + `useLang` shells need to be replaced (we did this for events/courses). Hardcoded English copy is fine for the demo.
 
 ### Phase 6b — Role landing dashboards (~30min)
 **Plan:** task 6.5.
 **Deliverable:** `app/(student)/me/page.tsx`, `app/(mentor)/mentor/profile/page.tsx`, `app/(admin)/admin/page.tsx`.
 **Verify:** Each role signs in and lands on a real dashboard with stats, links, sign-out button.
+**While you're in there — open gaps to close:**
+- Student nav (`app/(student)/layout.tsx`) is missing a "Courses" link. `/me` dashboard should surface active enrollments (resolves the gap noted in Phase 4's handoff).
+- Mentor nav (`app/(mentor)/layout.tsx`) has the Profile link stripped because the page didn't exist yet — restore it once `/mentor/profile` is built in this task.
+- Admin sidebar is fine but `/admin/scan` isn't in the nav — consider adding it (currently only reachable via the funnel page's "Open scanner" pill).
 
 ### Phase 7 — Broadcast email (~2h)
 **Plan:** "Phase 7", tasks 7.1 – 7.3.
