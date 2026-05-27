@@ -97,6 +97,12 @@ export default async function EventFunnelPage({
         <Link href={`/events/${event.slug}`} style={pillButton}>
           View public page
         </Link>
+        <Link
+          href="/admin/scan"
+          style={{ ...pillButton, background: A.navy, color: "#fff", borderColor: A.navy }}
+        >
+          Open scanner
+        </Link>
       </div>
 
       <div
