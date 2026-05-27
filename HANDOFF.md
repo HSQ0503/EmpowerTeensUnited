@@ -95,11 +95,10 @@ Public `/events` list + `/events/[slug]` detail are DB-backed (Prisma `event.fin
 ### ✅ Phase 3c — QR scan (DONE)
 `/api/scan?t=<token>` looks up the registration, idempotently creates an `EventCheckin` (skips when one already exists), and returns a brand-styled HTML confirmation page (✓ checked in / ↻ already checked in / ? unknown QR / ! missing token / 403 wrong role). Unauthenticated callers redirect through `/sign-in?next=…` preserving the scan URL. `/admin/scan` dynamic-imports `html5-qrcode` (added to deps) and decodes via the rear camera, navigating to the decoded URL on hit. 1 commit at `43e8887`. **Reminder:** mobile camera APIs need HTTPS in production — works on localhost without TLS and on Vercel previews (HTTPS automatic).
 
-### Phase 4 — Courses + weekly reflection (~2h)
-**Plan:** "Phase 4", tasks 4.1 – 4.4.
-**Deliverable:** Public course list/detail, enroll route handler, `/me/courses/[slug]` weekly answer form, admin course CRUD with per-week prompt editor (JSON in textarea).
-**Verify:** Admin creates course with 3 weeks and one question per week → publishes → student enrolls → answers week 1 → admin or mentor sees answer.
-**Watch out for:** Course `weeks` field is the count (int); when creating a course, the action auto-generates that many `course_weeks` rows. Don't accept arbitrary user input for week structure.
+### ✅ Phase 4 — Courses + weekly reflection (DONE)
+Public `/courses` + `/courses/[slug]` DB-backed, weekly outline pulled from `course_weeks`. POST `/courses/[slug]/enroll` route handler (303 redirects) auth-gates, restricts to `role=student`, then upserts `Enrollment` on the `courseId_profileId` composite key — re-enrolls a previously-dropped student cleanly. Student surfaces: `/me/courses/[slug]` shows a progress bar + per-week checklist; `/me/courses/[slug]/week/[n]` renders the week body + dynamic short/long question form from the `CourseWeek.questions` JSON column. `submitWeekAnswersAction` upserts `LessonResponse` by `enrollmentId_weekId` and re-stamps `submittedAt` on every save, redirects back with `?saved=<weekNo>`. Admin `/admin/courses` list + `/new` + `/[id]/edit`: create action transactionally seeds N empty `courseWeek` rows; metadata form (shared via `_metadata-form.tsx`) hides the weeks input on edit to avoid orphaning rows; per-week prompt editor with pretty-printed questions JSON; archive in a danger zone. 4 commits ending at `3e6ba69`.
+
+**Gotcha** for the next agent: Prisma 7 `Json` columns need `Prisma.InputJsonValue` casts (not `as any`). The `CourseLanguage` enum is re-exported from `@/prisma/generated/client/client`. The student layout still doesn't have a "Courses" nav link — students reach `/me/courses/[slug]` via the "Open my course" CTA on `/courses/[slug]` (added in 4.1). Phase 6b is the natural place to add a `/me` dashboard that lists active enrollments.
 
 ### Phase 5 — Mentorship 3-form flow (~2h)
 **Plan:** "Phase 5", tasks 5.1 – 5.4.
