@@ -4,7 +4,13 @@ import { render } from "@react-email/components";
 import BroadcastShell from "@/emails/BroadcastShell";
 import { prisma } from "@/lib/prisma";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazily constructed: `new Resend()` throws without an API key, which would
+// break `next build`'s page-data collection where env vars aren't present.
+let _resend: Resend | null = null;
+function resendClient() {
+  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY);
+  return _resend;
+}
 const FROM = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const BATCH_SIZE = 100;
@@ -55,7 +61,7 @@ export async function processCampaignBatch(campaignId: string): Promise<{
       BroadcastShell({ bodyHtml: campaign.bodyHtml, unsubscribeUrl }),
     );
     try {
-      const res = await resend.emails.send({
+      const res = await resendClient().emails.send({
         from: campaign.sender || `Empower Teens United <${FROM}>`,
         to: recipient.email,
         subject: campaign.subject,

@@ -9,7 +9,13 @@ import { buildScanUrl, generateQrDataUrl } from "@/lib/qr";
 import { formatEventDateTime } from "@/lib/dates";
 import type { Event, EventRegistration } from "@/prisma/generated/client/client";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazily constructed: `new Resend()` throws without an API key, which would
+// break `next build`'s page-data collection where env vars aren't present.
+let _resend: Resend | null = null;
+function resendClient() {
+  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY);
+  return _resend;
+}
 const FROM = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const TEAM_INBOX = process.env.ETU_TEAM_INBOX ?? "info@empowerteensunited.org";
@@ -25,7 +31,7 @@ export async function sendInviteEmail(params: {
     InviteEmail({ inviteUrl, role: params.role, invitedByName: params.invitedByName }),
   );
 
-  await resend.emails.send({
+  await resendClient().emails.send({
     from: `Empower Teens United <${FROM}>`,
     to: params.toEmail,
     subject: `You're invited to ETU (${params.role})`,
@@ -63,7 +69,7 @@ export async function sendRegistrationConfirmation(params: {
     `Event page: ${SITE_URL}/events/${params.event.slug}`,
   ].join("\n");
 
-  await resend.emails.send({
+  await resendClient().emails.send({
     from: `Empower Teens United <${FROM}>`,
     to: params.toEmail,
     subject: `You're registered for ${params.event.title}`,
@@ -80,7 +86,7 @@ export async function sendContactAdminNotice(params: {
   message: string;
 }) {
   const html = await render(ContactNotification(params));
-  await resend.emails.send({
+  await resendClient().emails.send({
     from: `Empower Teens United <${FROM}>`,
     to: TEAM_INBOX,
     replyTo: params.email,
@@ -102,7 +108,7 @@ export async function sendContactAutoreply(params: {
   toEmail: string;
 }) {
   const html = await render(ContactReceived({ name: params.name }));
-  await resend.emails.send({
+  await resendClient().emails.send({
     from: `Empower Teens United <${FROM}>`,
     to: params.toEmail,
     subject: "We got your message",

@@ -172,7 +172,7 @@ export function Nav({ dashboardHref }: { dashboardHref?: string | null }) {
                 textDecoration: "none",
               }}
             >
-              {dashboardHref ? "Dashboard" : t.nav.signIn}
+              {dashboardHref ? t.nav.dashboard : t.nav.signIn}
             </Link>
           </motion.span>
         </div>
