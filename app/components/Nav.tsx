@@ -13,7 +13,7 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
-export function Nav() {
+export function Nav({ dashboardHref }: { dashboardHref?: string | null }) {
   const { t } = useLang();
   const pathname = usePathname();
   const items: Array<[string, string, string]> = [
@@ -158,12 +158,12 @@ export function Nav() {
           </motion.span>
           <motion.span style={{ display: "inline-block" }} whileHover={{ y: -2, background: "rgba(15,69,102,0.05)" }} whileTap={{ scale: 0.96 }} transition={{ type: "spring", stiffness: 360, damping: 22 }}>
             <Link
-              href="/sign-in"
+              href={dashboardHref ?? "/sign-in"}
               style={{
                 display: "inline-block",
-                background: "transparent",
-                color: fg,
-                border: `1.5px solid ${A.rule}`,
+                background: dashboardHref ? A.navy : "transparent",
+                color: dashboardHref ? "#fff" : fg,
+                border: `1.5px solid ${dashboardHref ? A.navy : A.rule}`,
                 padding: "11px 18px",
                 borderRadius: 4,
                 fontFamily: A.fontBody,
@@ -172,7 +172,7 @@ export function Nav() {
                 textDecoration: "none",
               }}
             >
-              {t.nav.signIn}
+              {dashboardHref ? "Dashboard" : t.nav.signIn}
             </Link>
           </motion.span>
         </div>
