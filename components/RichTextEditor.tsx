@@ -4,17 +4,21 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
-import { useState, type CSSProperties } from "react";
+import { upload } from "@vercel/blob/client";
+import { useRef, useState, type CSSProperties } from "react";
 import { A } from "@/app/components/tokens";
 
 type Props = {
   name: string;
   defaultValue?: string;
   placeholder?: string;
+  minHeight?: number;
 };
 
-export function RichTextEditor({ name, defaultValue = "" }: Props) {
+export function RichTextEditor({ name, defaultValue = "", minHeight = 240 }: Props) {
   const [html, setHtml] = useState(defaultValue);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
   const editor = useEditor({
     extensions: [StarterKit, Link.configure({ openOnClick: false }), Image],
     content: defaultValue,
@@ -23,6 +27,22 @@ export function RichTextEditor({ name, defaultValue = "" }: Props) {
   });
 
   if (!editor) return null;
+
+  async function onPickImage(file: File) {
+    setUploading(true);
+    try {
+      const result = await upload(`blog-body/${file.name}`, file, {
+        access: "public",
+        handleUploadUrl: "/api/upload",
+      });
+      editor?.chain().focus().setImage({ src: result.url }).run();
+    } catch (e) {
+      window.alert(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
 
   const btn = (active: boolean): CSSProperties => ({
     background: active ? A.navy : "#fff",
@@ -125,17 +145,25 @@ export function RichTextEditor({ name, defaultValue = "" }: Props) {
         </button>
         <button
           type="button"
-          onClick={() => {
-            const url = window.prompt("Image URL");
-            if (url) editor.chain().focus().setImage({ src: url }).run();
-          }}
-          style={btn(false)}
-          aria-label="Image"
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading}
+          style={{ ...btn(false), opacity: uploading ? 0.6 : 1 }}
+          aria-label="Upload image"
         >
-          Image
+          {uploading ? "Uploading…" : "Image"}
         </button>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) void onPickImage(file);
+          }}
+          style={{ display: "none" }}
+        />
       </div>
-      <div style={{ padding: 16, minHeight: 240, fontFamily: A.fontBody, color: A.ink, lineHeight: 1.6 }}>
+      <div style={{ padding: 16, minHeight, fontFamily: A.fontBody, color: A.ink, lineHeight: 1.6 }}>
         <EditorContent editor={editor} />
       </div>
       <input type="hidden" name={name} value={html} />

@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { A } from "@/app/components/tokens";
 import { authStyles as s } from "@/app/(auth)/_styles";
 import { CourseMetadataForm } from "../../_metadata-form";
+import { RichTextEditor } from "@/components/RichTextEditor";
+import { QuestionBuilder } from "@/app/components/QuestionBuilder";
 import {
   updateCourseMetadataAction,
   updateWeekAction,
@@ -124,26 +126,16 @@ export default async function EditCoursePage({
           lineHeight: 1.6,
         }}
       >
-        Each week has a title, body (HTML), and a JSON array of questions
-        students answer. Question shape:{" "}
-        <code
-          style={{
-            background: "#fff",
-            padding: "1px 6px",
-            borderRadius: 3,
-            border: `1px solid ${A.rule}`,
-            fontSize: 12,
-          }}
-        >
-          {`[{"id":"q1","prompt":"What did you learn?","type":"long"}]`}
-        </code>
-        . <code>type</code> is <code>short</code> or <code>long</code>.
+        For each week, give it a title, write the lesson content, and add the
+        reflection questions students answer. Choose{" "}
+        <strong>Short answer</strong> for a one-line response or{" "}
+        <strong>Paragraph</strong> for a longer one. Remember to save each week
+        after editing.
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {course.courseWeeks.map((w) => {
           const updateWeek = updateWeekAction.bind(null, w.id);
-          const prettyQuestions = JSON.stringify(w.questions, null, 2);
           return (
             <form
               key={w.id}
@@ -182,38 +174,36 @@ export default async function EditCoursePage({
                 />
               </div>
               <div>
-                <label htmlFor={`week-body-${w.id}`} style={s.fieldLabel}>
-                  Body (HTML)
-                </label>
-                <textarea
-                  id={`week-body-${w.id}`}
-                  name="body"
-                  rows={4}
-                  defaultValue={w.body}
-                  placeholder="Plain text or HTML — students see this above the prompts."
+                <label style={s.fieldLabel}>Lesson content</label>
+                <p
                   style={{
-                    ...s.input,
-                    fontFamily: "ui-monospace, monospace",
-                    fontSize: 13,
+                    margin: "0 0 8px",
+                    fontSize: 12,
+                    color: A.muted,
+                    lineHeight: 1.5,
                   }}
+                >
+                  Students see this above the questions.
+                </p>
+                <RichTextEditor
+                  name="body"
+                  defaultValue={w.body}
+                  minHeight={140}
                 />
               </div>
               <div>
-                <label htmlFor={`week-questions-${w.id}`} style={s.fieldLabel}>
-                  Questions (JSON)
-                </label>
-                <textarea
-                  id={`week-questions-${w.id}`}
-                  name="questions"
-                  rows={6}
-                  defaultValue={prettyQuestions}
-                  spellCheck={false}
+                <label style={s.fieldLabel}>Reflection questions</label>
+                <p
                   style={{
-                    ...s.input,
-                    fontFamily: "ui-monospace, monospace",
-                    fontSize: 13,
+                    margin: "0 0 10px",
+                    fontSize: 12,
+                    color: A.muted,
+                    lineHeight: 1.5,
                   }}
-                />
+                >
+                  These are the prompts students fill out for this week.
+                </p>
+                <QuestionBuilder name="questions" defaultValue={w.questions} />
               </div>
               <div>
                 <button

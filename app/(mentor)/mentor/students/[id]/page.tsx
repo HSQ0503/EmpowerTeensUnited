@@ -10,20 +10,30 @@ import { INTAKE_FORM } from "@/lib/forms/intake";
 import { SESSION_FORM } from "@/lib/forms/session";
 import { HS_PLAN_FORM } from "@/lib/forms/hs-plan";
 import type { FormAnswers } from "@/lib/forms/types";
-import { submitSessionFormAction } from "./actions";
+import {
+  submitSessionFormAction,
+  updateSessionFormAction,
+  deleteSessionFormAction,
+} from "./actions";
 
 export const metadata = { title: "Student · Mentor" };
+
+const SAVED_MESSAGES: Record<string, string> = {
+  session: "Session saved.",
+  session_updated: "Session updated.",
+  session_deleted: "Session deleted.",
+};
 
 export default async function MentorStudentPage({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ saved?: string }>;
+  searchParams: Promise<{ saved?: string; error?: string }>;
 }) {
   const { profile } = await requireRole("mentor");
   const { id } = await params;
-  const { saved } = await searchParams;
+  const { saved, error } = await searchParams;
 
   const assignment = await prisma.mentorAssignment.findFirst({
     where: { mentorId: profile.id, studentId: id, endedAt: null },
@@ -51,6 +61,7 @@ export default async function MentorStudentPage({
     prisma.mentorshipForm.findMany({
       where: { studentId: id, kind: "session" },
       orderBy: { sessionNo: "asc" },
+      include: { mentor: true },
     }),
     prisma.mentorshipForm.findFirst({
       where: { studentId: id, kind: "hs_plan", sessionNo: null },
@@ -96,8 +107,15 @@ export default async function MentorStudentPage({
         </p>
       </div>
 
-      {saved === "session" && (
-        <div style={{ ...s.alertInfo, marginBottom: 20 }}>Session saved.</div>
+      {saved && SAVED_MESSAGES[saved] && (
+        <div style={{ ...s.alertInfo, marginBottom: 20 }}>
+          {SAVED_MESSAGES[saved]}
+        </div>
+      )}
+      {error === "session" && (
+        <div style={{ ...s.alertError, marginBottom: 20 }}>
+          Please fill in the required session fields (marked *) before saving.
+        </div>
       )}
 
       <Card title={`Intake ${intake ? "· submitted" : "· pending"}`}>
@@ -118,6 +136,16 @@ export default async function MentorStudentPage({
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {sessions.map((session) => {
               const answers = (session.answers as FormAnswers) ?? {};
+              const updateThis = updateSessionFormAction.bind(
+                null,
+                session.id,
+                id,
+              );
+              const deleteThis = deleteSessionFormAction.bind(
+                null,
+                session.id,
+                id,
+              );
               return (
                 <details
                   key={session.id}
@@ -164,6 +192,15 @@ export default async function MentorStudentPage({
                             (answers.topics.length > 80 ? "…" : "")
                           : "Logged"}
                       </div>
+                      {session.mentor && (
+                        <div
+                          style={{ fontSize: 12, color: A.muted, marginTop: 2 }}
+                        >
+                          Logged by {session.mentor.firstName}{" "}
+                          {session.mentor.lastName}
+                          {session.mentor.id !== profile.id && " (former mentor)"}
+                        </div>
+                      )}
                     </div>
                     <span style={{ fontSize: 12, color: A.muted }}>
                       {session.submittedAt?.toLocaleDateString("en-US", {
@@ -175,6 +212,50 @@ export default async function MentorStudentPage({
                   <div style={{ marginTop: 14 }}>
                     <FormAnswerList def={SESSION_FORM} answers={answers} />
                   </div>
+
+                  <details style={{ marginTop: 14 }}>
+                    <summary
+                      style={{
+                        cursor: "pointer",
+                        fontSize: 12,
+                        fontWeight: 700,
+                        letterSpacing: 0.6,
+                        textTransform: "uppercase",
+                        color: A.navy,
+                      }}
+                    >
+                      Edit or delete this session
+                    </summary>
+                    <div style={{ marginTop: 14 }}>
+                      <FormRenderer
+                        def={SESSION_FORM}
+                        existing={answers}
+                        action={updateThis}
+                        submitLabel="Save changes"
+                        textareaRows={3}
+                      />
+                      <form action={deleteThis} style={{ marginTop: 12 }}>
+                        <button
+                          type="submit"
+                          style={{
+                            background: "transparent",
+                            border: "1px solid rgba(178, 34, 52, 0.4)",
+                            color: "#b22234",
+                            padding: "8px 14px",
+                            borderRadius: 4,
+                            fontFamily: A.fontBody,
+                            fontWeight: 700,
+                            fontSize: 12,
+                            letterSpacing: 0.5,
+                            textTransform: "uppercase",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Delete session {session.sessionNo}
+                        </button>
+                      </form>
+                    </div>
+                  </details>
                 </details>
               );
             })}

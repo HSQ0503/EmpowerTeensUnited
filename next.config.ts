@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "okekmrbmxjaxqjzovovs.supabase.co" },
       { protocol: "https", hostname: "**.supabase.co" },
+      { protocol: "https", hostname: "**.public.blob.vercel-storage.com" },
     ],
   },
 };

@@ -1,5 +1,6 @@
 import { A } from "@/app/components/tokens";
 import { authStyles as s } from "@/app/(auth)/_styles";
+import { ImageUploadField } from "@/app/components/ImageUploadField";
 
 type EventLike = {
   title?: string;
@@ -82,15 +83,11 @@ export function EventForm({
       </div>
 
       <div>
-        <label htmlFor="cover_image_url" style={s.fieldLabel}>
-          Cover image URL (optional)
-        </label>
-        <input
-          id="cover_image_url"
+        <span style={s.fieldLabel}>Cover image (optional)</span>
+        <ImageUploadField
           name="cover_image_url"
-          type="url"
-          defaultValue={event?.coverImageUrl ?? ""}
-          style={s.input}
+          defaultValue={event?.coverImageUrl ?? null}
+          pathPrefix="events"
         />
       </div>
 

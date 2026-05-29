@@ -95,6 +95,7 @@ export function FormRenderer({
             <input
               id={`f_${def.title}_${q.id}`}
               name={q.id}
+              type={q.type === "date" ? "date" : "text"}
               required={!!q.required}
               defaultValue={existing?.[q.id] ?? ""}
               style={s.input}

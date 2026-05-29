@@ -117,25 +117,6 @@ export function Nav({ dashboardHref }: { dashboardHref?: string | null }) {
           })}
         </nav>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-          <motion.button
-            type="button"
-            whileHover={{ scale: 1.08, color: A.navy }}
-            whileTap={{ scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 360, damping: 22 }}
-            style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              color: fg,
-              padding: 8,
-            }}
-            aria-label={t.nav.search}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="11" cy="11" r="7" />
-              <path d="m20 20-3.5-3.5" />
-            </svg>
-          </motion.button>
           <motion.span style={{ display: "inline-block" }} whileHover={{ y: -2, boxShadow: "0 14px 24px -14px rgba(252,204,0,0.6)" }} whileTap={{ scale: 0.96 }} transition={{ type: "spring", stiffness: 360, damping: 22 }}>
             <Link
               href="/contact"

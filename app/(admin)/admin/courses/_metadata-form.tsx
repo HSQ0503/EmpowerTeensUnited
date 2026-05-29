@@ -1,5 +1,6 @@
 import { A } from "@/app/components/tokens";
 import { authStyles as s } from "@/app/(auth)/_styles";
+import { RichTextEditor } from "@/components/RichTextEditor";
 
 type CourseLike = {
   title?: string;
@@ -75,20 +76,19 @@ export function CourseMetadataForm({
       </div>
 
       <div>
-        <label htmlFor="body" style={s.fieldLabel}>
-          Body (HTML allowed)
-        </label>
-        <textarea
-          id="body"
-          name="body"
-          rows={8}
-          defaultValue={course?.body ?? ""}
+        <label style={s.fieldLabel}>Description</label>
+        <p
           style={{
-            ...s.input,
-            fontFamily: "ui-monospace, monospace",
+            margin: "0 0 8px",
             fontSize: 13,
+            color: A.muted,
+            lineHeight: 1.5,
           }}
-        />
+        >
+          This appears on the public program page. Use the toolbar to add
+          headings, bold text, and lists.
+        </p>
+        <RichTextEditor name="body" defaultValue={course?.body ?? ""} />
       </div>
 
       <div>

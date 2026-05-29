@@ -15,10 +15,10 @@ export const metadata = { title: "Mentorship · Empower Teens United" };
 export default async function MentorshipPage({
   searchParams,
 }: {
-  searchParams: Promise<{ saved?: string }>;
+  searchParams: Promise<{ saved?: string; error?: string }>;
 }) {
   const { profile } = await requireRole("student");
-  const { saved } = await searchParams;
+  const { saved, error } = await searchParams;
 
   const [intake, hsPlan, sessions, assignment] = await Promise.all([
     prisma.mentorshipForm.findFirst({
@@ -100,6 +100,7 @@ export default async function MentorshipPage({
           value={
             mentor ? `${mentor.firstName} ${mentor.lastName}` : "Not yet paired"
           }
+          sub={mentor?.email ?? undefined}
           status={mentor ? "active" : "idle"}
         />
         <Pillar
@@ -119,6 +120,18 @@ export default async function MentorshipPage({
       )}
       {saved === "hs_plan" && (
         <div style={{ ...s.alertInfo, marginBottom: 20 }}>HS plan saved.</div>
+      )}
+      {error === "intake" && (
+        <div style={{ ...s.alertError, marginBottom: 20 }}>
+          Please answer all required intake questions (marked *) before
+          submitting.
+        </div>
+      )}
+      {error === "hs_plan" && (
+        <div style={{ ...s.alertError, marginBottom: 20 }}>
+          Please answer all required plan questions (marked *) before
+          submitting.
+        </div>
       )}
 
       <section style={{ marginBottom: 40 }}>
@@ -256,10 +269,12 @@ function SectionHeader({ title }: { title: string }) {
 function Pillar({
   label,
   value,
+  sub,
   status,
 }: {
   label: string;
   value: string;
+  sub?: string;
   status: "idle" | "active" | "done";
 }) {
   const color = status === "done" ? "#1f8a5b" : status === "active" ? A.navy : A.muted;
@@ -289,6 +304,21 @@ function Pillar({
       >
         {value}
       </div>
+      {sub && (
+        <a
+          href={`mailto:${sub}`}
+          style={{
+            display: "inline-block",
+            marginTop: 4,
+            fontSize: 13,
+            color: A.navy,
+            textDecoration: "none",
+            borderBottom: `1px solid ${A.gold}`,
+          }}
+        >
+          {sub}
+        </a>
+      )}
     </div>
   );
 }

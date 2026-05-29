@@ -2,12 +2,23 @@ import Link from "next/link";
 import { requireRole } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { A } from "@/app/components/tokens";
+import { authStyles as s } from "@/app/(auth)/_styles";
 import { assignMentorAction, endAssignmentAction } from "./actions";
 
 export const metadata = { title: "Mentorship · Admin" };
 
-export default async function AdminMentorshipPage() {
+const ASSIGN_ERRORS: Record<string, string> = {
+  missing: "Pick a mentor before saving.",
+  invalid: "That pairing was rejected — check the student and mentor accounts.",
+};
+
+export default async function AdminMentorshipPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
   await requireRole("admin");
+  const { error } = await searchParams;
 
   const [students, mentors] = await Promise.all([
     prisma.profile.findMany({
@@ -67,6 +78,12 @@ export default async function AdminMentorshipPage() {
           had been ended.
         </p>
       </div>
+
+      {error && (
+        <div style={{ ...s.alertError, marginBottom: 20 }}>
+          {ASSIGN_ERRORS[error] ?? "Something went wrong saving that pairing."}
+        </div>
+      )}
 
       <div
         style={{

@@ -1,7 +1,7 @@
 export type FormQuestion = {
   id: string;
   prompt: string;
-  type: "short" | "long" | "select";
+  type: "short" | "long" | "select" | "date";
   options?: string[];
   required?: boolean;
 };

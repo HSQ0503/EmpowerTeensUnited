@@ -5,6 +5,8 @@ import InviteEmail from "@/emails/InviteEmail";
 import RegistrationConfirmation from "@/emails/RegistrationConfirmation";
 import ContactNotification from "@/emails/ContactNotification";
 import ContactReceived from "@/emails/ContactReceived";
+import MentorAssigned from "@/emails/MentorAssigned";
+import SessionLogged from "@/emails/SessionLogged";
 import { buildScanUrl, generateQrDataUrl } from "@/lib/qr";
 import { formatEventDateTime } from "@/lib/dates";
 import type { Event, EventRegistration } from "@/prisma/generated/client/client";
@@ -100,6 +102,52 @@ export async function sendContactAdminNotice(params: {
     ]
       .filter(Boolean)
       .join("\n"),
+  });
+}
+
+export async function sendMentorAssignedEmail(params: {
+  toEmail: string;
+  studentName: string;
+  mentorName: string;
+}) {
+  const mentorshipUrl = `${SITE_URL}/me/mentorship`;
+  const html = await render(
+    MentorAssigned({
+      studentName: params.studentName,
+      mentorName: params.mentorName,
+      mentorshipUrl,
+    }),
+  );
+  await resendClient().emails.send({
+    from: `Empower Teens United <${FROM}>`,
+    to: params.toEmail,
+    subject: `You've been matched with ${params.mentorName}`,
+    html,
+    text: `Hi ${params.studentName}, ${params.mentorName} is now your ETU mentor. Fill out your intake so they can prepare: ${mentorshipUrl}`,
+  });
+}
+
+export async function sendSessionLoggedEmail(params: {
+  toEmail: string;
+  studentName: string;
+  mentorName: string;
+  sessionNo: number;
+}) {
+  const mentorshipUrl = `${SITE_URL}/me/mentorship`;
+  const html = await render(
+    SessionLogged({
+      studentName: params.studentName,
+      mentorName: params.mentorName,
+      sessionNo: params.sessionNo,
+      mentorshipUrl,
+    }),
+  );
+  await resendClient().emails.send({
+    from: `Empower Teens United <${FROM}>`,
+    to: params.toEmail,
+    subject: `Session ${params.sessionNo} notes from ${params.mentorName}`,
+    html,
+    text: `Hi ${params.studentName}, ${params.mentorName} logged notes from session ${params.sessionNo}. Review them: ${mentorshipUrl}`,
   });
 }
 

@@ -5,7 +5,7 @@ export const SESSION_FORM: FormDefinition = {
   title: "Session notes",
   description: "Filled by the mentor during or right after each meeting.",
   questions: [
-    { id: "date", prompt: "Date of session", type: "short", required: true },
+    { id: "date", prompt: "Date of session", type: "date", required: true },
     { id: "duration", prompt: "Approximate length (minutes)", type: "short" },
     {
       id: "format",
@@ -22,7 +22,7 @@ export const SESSION_FORM: FormDefinition = {
       prompt: "Action items for the student before next session",
       type: "long",
     },
-    { id: "next_session", prompt: "Tentative next session date", type: "short" },
+    { id: "next_session", prompt: "Tentative next session date", type: "date" },
     { id: "mentor_notes", prompt: "Anything else for your records or admin", type: "long" },
   ],
 };
