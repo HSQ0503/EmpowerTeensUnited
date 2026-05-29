@@ -74,6 +74,7 @@ export default async function AdminContactDetailPage({
           ← Inbox
         </Link>
         <div
+          className="etu-stack"
           style={{
             display: "flex",
             justifyContent: "space-between",

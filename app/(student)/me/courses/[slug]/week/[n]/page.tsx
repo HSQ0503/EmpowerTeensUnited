@@ -73,6 +73,7 @@ export default async function WeekAnswerPage({
           Week {week.weekNo} of {course.weeks}
         </div>
         <h1
+          className="etu-h2"
           style={{
             fontFamily: A.fontHead,
             fontSize: 32,
@@ -120,6 +121,7 @@ export default async function WeekAnswerPage({
       ) : (
         <form
           action={submit}
+          className="etu-px"
           style={{
             background: "#fff",
             border: `1px solid ${A.rule}`,
@@ -160,7 +162,7 @@ export default async function WeekAnswerPage({
           ))}
 
           <div style={{ marginTop: 8 }}>
-            <button type="submit" style={s.primaryButton}>
+            <button type="submit" className="etu-fullw" style={s.primaryButton}>
               {response?.submittedAt ? "Update answers" : "Submit answers"}
             </button>
           </div>

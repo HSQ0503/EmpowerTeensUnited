@@ -75,6 +75,7 @@ export default async function StudentDashboardPage() {
     <div style={{ maxWidth: 1100, margin: "0 auto" }}>
       {/* Hero greeting */}
       <section
+        className="etu-px"
         style={{
           background: `linear-gradient(135deg, ${A.navy} 0%, ${A.navyDark} 100%)`,
           color: "#fff",
@@ -110,6 +111,7 @@ export default async function StudentDashboardPage() {
           {greeting}
         </div>
         <h1
+          className="etu-h1"
           style={{
             fontFamily: A.fontHead,
             fontSize: 40,
@@ -172,6 +174,7 @@ export default async function StudentDashboardPage() {
 
       {/* Main grid */}
       <div
+        className="etu-collapse"
         style={{
           display: "grid",
           gridTemplateColumns: "minmax(0, 2fr) minmax(0, 1fr)",
@@ -211,6 +214,7 @@ export default async function StudentDashboardPage() {
                       }}
                     >
                       <div
+                        className="etu-stack"
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
@@ -300,6 +304,7 @@ export default async function StudentDashboardPage() {
                 {upcomingRegs.map((r) => (
                   <div
                     key={r.id}
+                    className="etu-collapse"
                     style={{
                       display: "grid",
                       gridTemplateColumns: "auto 1fr auto",
@@ -585,6 +590,7 @@ function Card({
       }}
     >
       <div
+        className="etu-stack"
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -806,6 +812,7 @@ function StatusRow({
 }) {
   return (
     <div
+      className="etu-stack"
       style={{
         display: "flex",
         justifyContent: "space-between",

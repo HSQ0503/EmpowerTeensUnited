@@ -53,6 +53,7 @@ export default async function EditCoursePage({
           ← Courses
         </Link>
         <h1
+          className="etu-h2"
           style={{
             marginTop: 12,
             fontFamily: A.fontHead,

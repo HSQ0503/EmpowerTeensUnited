@@ -106,6 +106,7 @@ export default async function CampaignReportPage({
           ← Broadcasts
         </Link>
         <div
+          className="etu-stack"
           style={{
             display: "flex",
             justifyContent: "space-between",
@@ -154,6 +155,7 @@ export default async function CampaignReportPage({
       </div>
 
       <div
+        className="etu-collapse-2"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(6, 1fr)",
@@ -200,7 +202,8 @@ export default async function CampaignReportPage({
       {hasQueued && (
         <form
           action={drain}
-          style={{
+          className="etu-stack"
+        style={{
             marginTop: 24,
             background: "#fff",
             border: `1px solid ${A.rule}`,
@@ -298,6 +301,7 @@ export default async function CampaignReportPage({
           overflow: "hidden",
         }}
       >
+        <div className="etu-table-wrap">
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr
@@ -351,6 +355,7 @@ export default async function CampaignReportPage({
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

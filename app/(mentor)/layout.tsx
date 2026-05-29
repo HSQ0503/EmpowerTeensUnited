@@ -22,6 +22,7 @@ export default async function MentorLayout({ children }: { children: ReactNode }
       }}
     >
       <header
+        className="etu-appbar"
         style={{
           background: A.navy,
           color: "#fff",
@@ -35,12 +36,13 @@ export default async function MentorLayout({ children }: { children: ReactNode }
       >
         <Link
           href="/mentor"
+          className="etu-appbar-logo"
           style={{ textDecoration: "none", display: "inline-flex" }}
         >
           <EtuLockup height={42} color="#fff" />
         </Link>
 
-        <nav style={{ display: "flex", gap: 28, justifyContent: "center" }}>
+        <nav className="etu-appbar-nav" style={{ display: "flex", gap: 28, justifyContent: "center", whiteSpace: "nowrap" }}>
           {navLinks.map(([label, href]) => (
             <Link
               key={href}
@@ -60,7 +62,7 @@ export default async function MentorLayout({ children }: { children: ReactNode }
           ))}
         </nav>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div className="etu-appbar-user" style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <div style={{ textAlign: "right", lineHeight: 1.15 }}>
             <div style={{ fontSize: 13, fontWeight: 700 }}>
               {profile.firstName} {profile.lastName}
@@ -100,7 +102,7 @@ export default async function MentorLayout({ children }: { children: ReactNode }
         </div>
       </header>
 
-      <main style={{ padding: "48px 32px 80px" }}>{children}</main>
+      <main className="etu-px" style={{ padding: "48px 32px 80px" }}>{children}</main>
     </div>
   );
 }

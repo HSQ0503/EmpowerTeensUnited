@@ -133,6 +133,7 @@ export function CourseMetadataForm({
       </div>
 
       <div
+        className="etu-collapse"
         style={{
           display: "grid",
           gridTemplateColumns: showWeeksInput

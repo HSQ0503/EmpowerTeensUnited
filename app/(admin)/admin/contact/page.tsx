@@ -58,6 +58,7 @@ export default async function AdminContactInbox() {
           Inbox
         </div>
         <h1
+          className="etu-h2"
           style={{
             fontFamily: A.fontHead,
             fontSize: 32,
@@ -83,6 +84,7 @@ export default async function AdminContactInbox() {
           overflow: "hidden",
         }}
       >
+        <div className="etu-table-wrap">
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr
@@ -170,6 +172,7 @@ export default async function AdminContactInbox() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

@@ -37,6 +37,7 @@ export default async function AdminTeamPage({
           People
         </div>
         <h1
+          className="etu-h2"
           style={{
             fontFamily: A.fontHead,
             fontSize: 32,

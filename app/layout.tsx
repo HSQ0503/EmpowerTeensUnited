@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Manrope, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "./i18n/LanguageProvider";
@@ -20,6 +20,12 @@ export const metadata: Metadata = {
   title: "Empower Teens United — Inspiring teens. Strengthening families.",
   description:
     "Free mentorship, leadership and emotional wellness programs that equip teens with confidence and purpose.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

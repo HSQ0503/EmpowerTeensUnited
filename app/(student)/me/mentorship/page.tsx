@@ -58,6 +58,7 @@ export default async function MentorshipPage({
           Mentorship
         </div>
         <h1
+          className="etu-h1"
           style={{
             fontFamily: A.fontHead,
             fontSize: 38,
@@ -84,6 +85,7 @@ export default async function MentorshipPage({
       </div>
 
       <div
+        className="etu-collapse-2"
         style={{
           background: "#fff",
           border: `1px solid ${A.rule}`,
@@ -176,6 +178,7 @@ export default async function MentorshipPage({
                   }}
                 >
                   <summary
+                    className="etu-stack"
                     style={{
                       cursor: "pointer",
                       listStyle: "none",

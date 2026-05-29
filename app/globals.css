@@ -67,6 +67,178 @@ html { scrollbar-width: thin; scrollbar-color: rgba(15, 69, 102, 0.2) transparen
 /* Selection */
 ::selection { background: var(--color-gold); color: var(--color-navy); }
 
+/* ============================================================
+   Responsive utility layer
+   ------------------------------------------------------------
+   This site is built with inline style={{}} objects, which can't
+   hold media queries. These classes use !important inside @media
+   blocks — author !important beats normal inline styles in the
+   cascade — so adding a className to a container overrides its
+   inline desktop values on smaller screens without restructuring.
+
+   Breakpoints: <=900px tablet, <=768px mobile, <=480px small phone.
+   ============================================================ */
+
+/* Hard guard against horizontal overflow anywhere on the page.
+   overflow-x: clip (not hidden) leaves position: sticky working. */
+html, body { max-width: 100%; overflow-x: clip; }
+img, svg, video, canvas { max-width: 100%; height: auto; }
+
+/* Show/hide helpers */
+.etu-mobile-only { display: none !important; }
+@media (max-width: 768px) {
+  .etu-mobile-only { display: revert !important; }
+  .etu-desktop-only { display: none !important; }
+}
+
+/* Collapse large horizontal page padding (e.g. 56px/48px/32px).
+   Only L/R is touched so each element keeps its own vertical rhythm. */
+@media (max-width: 768px) {
+  .etu-px { padding-left: 20px !important; padding-right: 20px !important; }
+}
+@media (max-width: 480px) {
+  .etu-px { padding-left: 16px !important; padding-right: 16px !important; }
+}
+
+/* Full section padding compression — use on tall hero/marketing sections
+   that carry big vertical padding (96px etc.). Overrides all four sides. */
+@media (max-width: 768px) {
+  .etu-section { padding: 56px 20px !important; }
+}
+@media (max-width: 480px) {
+  .etu-section { padding: 44px 16px !important; }
+}
+
+/* Collapse any multi-column grid to a single column. */
+@media (max-width: 768px) {
+  .etu-collapse { grid-template-columns: 1fr !important; gap: 24px !important; }
+}
+
+/* Collapse to 2 columns on tablet/phone, then 1 on small phones.
+   Good for 3-/4-up stat or card rows where 2x2 reads better than a stack. */
+@media (max-width: 768px) {
+  .etu-collapse-2 { grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
+}
+@media (max-width: 480px) {
+  .etu-collapse-2 { grid-template-columns: 1fr !important; }
+}
+
+/* Stack a flex row vertically (e.g. header rows: title left, button right). */
+@media (max-width: 768px) {
+  .etu-stack {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+}
+
+/* Fluidly clamp oversized inline heading sizes on small screens. */
+@media (max-width: 768px) {
+  .etu-display { font-size: clamp(34px, 9vw, 52px) !important; line-height: 1.08 !important; }
+  .etu-h1 { font-size: clamp(28px, 7.5vw, 40px) !important; line-height: 1.12 !important; }
+  .etu-h2 { font-size: clamp(24px, 6.5vw, 34px) !important; line-height: 1.15 !important; }
+  .etu-h3 { font-size: clamp(19px, 5vw, 24px) !important; }
+}
+
+/* Horizontally scrollable wrapper for wide data tables.
+   Applies at all sizes — keeps wide tables from blowing out the layout. */
+.etu-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.etu-table-wrap > table { min-width: max-content; }
+
+/* Horizontal scroll strip for tab/nav rows that can't all fit. */
+.etu-scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.etu-scroll-x::-webkit-scrollbar { display: none; }
+
+/* Make form controls comfortably tappable on touch devices. */
+@media (max-width: 768px) {
+  .etu-fullw { width: 100% !important; }
+}
+
+/* Role-dashboard app bar (student/mentor): on mobile, logo + user stay on
+   row 1 and the nav drops to a full-width scrollable strip on row 2. */
+@media (max-width: 768px) {
+  .etu-appbar {
+    grid-template-columns: 1fr auto !important;
+    grid-template-areas: "logo user" "nav nav" !important;
+    gap: 14px 12px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  .etu-appbar-logo { grid-area: logo; }
+  .etu-appbar-user { grid-area: user; }
+  .etu-appbar-nav {
+    grid-area: nav;
+    justify-content: flex-start !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 0 -20px;
+    padding: 0 20px 2px;
+  }
+  .etu-appbar-nav::-webkit-scrollbar { display: none; }
+}
+
+/* Admin console shell: 240px sticky sidebar on desktop; off-canvas drawer
+   with a scrim + mobile top bar below 768px. */
+.etu-admin-topbar { display: none; }
+.etu-admin-scrim { display: none; }
+@media (max-width: 768px) {
+  .etu-admin-grid { grid-template-columns: 1fr !important; }
+  .etu-admin-topbar {
+    display: flex !important;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    padding: 12px 16px;
+    background: var(--color-navy-dark);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .etu-admin-aside {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0;
+    bottom: 0;
+    height: 100dvh !important;
+    width: 260px !important;
+    max-width: 84vw;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 60;
+  }
+  .etu-admin-aside.is-open {
+    transform: translateX(0);
+    box-shadow: 0 0 70px rgba(0, 0, 0, 0.45);
+  }
+  .etu-admin-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 55;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .etu-admin-scrim.is-open { opacity: 1; pointer-events: auto; }
+  .etu-admin-main { padding: 24px 18px 64px !important; }
+}
+
+/* Home hero: drop the fixed 680px height and tall top padding on mobile. */
+@media (max-width: 768px) {
+  .etu-homehero { height: auto !important; min-height: 0 !important; }
+  .etu-homehero-inner { padding: 116px 20px 64px !important; max-width: 100% !important; }
+}
+
 /* Footer link hover */
 .etu-footer-link { display: inline-block; transition: color 200ms ease, transform 200ms ease; }
 .etu-footer-link:hover { color: var(--color-gold) !important; transform: translateX(4px); }

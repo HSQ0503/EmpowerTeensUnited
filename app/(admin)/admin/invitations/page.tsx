@@ -60,6 +60,7 @@ export default async function InvitationsPage({
           Team management
         </div>
         <h1
+          className="etu-h1"
           style={{
             fontFamily: A.fontHead,
             fontSize: 38,
@@ -86,6 +87,7 @@ export default async function InvitationsPage({
 
       <form
         action={createInviteAction}
+        className="etu-collapse"
         style={{
           background: "#fff",
           border: `1px solid ${A.rule}`,
@@ -150,6 +152,7 @@ export default async function InvitationsPage({
           boxShadow: "0 12px 32px -24px rgba(15, 69, 102, 0.18)",
         }}
       >
+        <div className="etu-table-wrap">
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
           <thead>
             <tr
@@ -228,6 +231,7 @@ export default async function InvitationsPage({
             })}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

@@ -58,22 +58,22 @@ export default function Home() {
     <>
       <HomeHero />
 
-      <section style={{ background: "#fff", padding: "56px 56px", borderBottom: `1px solid ${A.rule}` }}>
-        <Stagger style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 40 }}>
+      <section className="etu-px" style={{ background: "#fff", padding: "56px 56px", borderBottom: `1px solid ${A.rule}` }}>
+        <Stagger className="etu-collapse-2" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 40 }}>
           {stats.map(([n, label]) => (
             <StaggerItem key={label} style={{ borderLeft: `2px solid ${A.gold}`, paddingLeft: 20 }}>
-              <div style={{ fontFamily: A.fontHead, fontSize: 52, fontWeight: 500, color: A.navy, lineHeight: 1, letterSpacing: "-0.03em" }}>{n}</div>
+              <div className="etu-display" style={{ fontFamily: A.fontHead, fontSize: 52, fontWeight: 500, color: A.navy, lineHeight: 1, letterSpacing: "-0.03em" }}>{n}</div>
               <div style={{ marginTop: 10, fontSize: 13, letterSpacing: 1.5, textTransform: "uppercase", color: A.muted, fontWeight: 600 }}>{label}</div>
             </StaggerItem>
           ))}
         </Stagger>
       </section>
 
-      <section style={{ padding: "96px 56px", background: A.bg }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 80, alignItems: "center" }}>
+      <section className="etu-section" style={{ padding: "96px 56px", background: A.bg }}>
+        <div className="etu-collapse" style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 80, alignItems: "center" }}>
           <Reveal>
             <SectionLabel>{t.home.missionLabel}</SectionLabel>
-            <h2 style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, color: A.navy, margin: 0, lineHeight: 1.12, letterSpacing: "-0.02em" }}>
+            <h2 className="etu-h1" style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, color: A.navy, margin: 0, lineHeight: 1.12, letterSpacing: "-0.02em" }}>
               {t.home.missionTitle1}<br />{t.home.missionTitle2}
             </h2>
             <p style={{ fontSize: 17, lineHeight: 1.75, marginTop: 24, color: A.body, maxWidth: 520 }}>
@@ -101,20 +101,20 @@ export default function Home() {
         </div>
       </section>
 
-      <section style={{ padding: "96px 56px", background: "#fff" }}>
+      <section className="etu-section" style={{ padding: "96px 56px", background: "#fff" }}>
         <Reveal style={{ textAlign: "center", marginBottom: 56 }}>
           <SectionLabel>{t.home.pillarsLabel}</SectionLabel>
-          <h2 style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, color: A.navy, margin: 0, letterSpacing: "-0.02em" }}>
+          <h2 className="etu-h1" style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, color: A.navy, margin: 0, letterSpacing: "-0.02em" }}>
             {t.home.pillarsTitle}
           </h2>
         </Reveal>
-        <Stagger style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32 }}>
+        <Stagger className="etu-collapse-2" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32 }}>
           {pillars.map((c) => (
             <StaggerItem key={c.t}>
               <HoverCard style={{ background: "#fff", border: `1px solid ${A.rule}` }}>
                 <ZoomImage src={c.img} alt={c.t} height={220} />
                 <div style={{ padding: "28px 28px 32px" }}>
-                  <h3 style={{ fontFamily: A.fontHead, fontSize: 26, fontWeight: 500, color: A.navy, margin: 0, marginBottom: 14 }}>{c.t}</h3>
+                  <h3 className="etu-h2" style={{ fontFamily: A.fontHead, fontSize: 26, fontWeight: 500, color: A.navy, margin: 0, marginBottom: 14 }}>{c.t}</h3>
                   <p style={{ fontSize: 15, lineHeight: 1.7, color: A.body, margin: 0 }}>{c.p}</p>
                 </div>
               </HoverCard>
@@ -123,11 +123,11 @@ export default function Home() {
         </Stagger>
       </section>
 
-      <section style={{ padding: "96px 56px", background: A.bg }}>
-        <Reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "end", marginBottom: 48 }}>
+      <section className="etu-section" style={{ padding: "96px 56px", background: A.bg }}>
+        <Reveal className="etu-stack" style={{ display: "flex", justifyContent: "space-between", alignItems: "end", marginBottom: 48 }}>
           <div>
             <SectionLabel>{t.home.programsLabel}</SectionLabel>
-            <h2 style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, color: A.navy, margin: 0, letterSpacing: "-0.02em" }}>
+            <h2 className="etu-h1" style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, color: A.navy, margin: 0, letterSpacing: "-0.02em" }}>
               {t.home.programsTitle1}<br />{t.home.programsTitle2}
             </h2>
           </div>
@@ -135,7 +135,7 @@ export default function Home() {
             {t.cta.viewAllCourses} →
           </Link>
         </Reveal>
-        <Stagger style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32 }}>
+        <Stagger className="etu-collapse-2" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32 }}>
           {programs.map((c) => (
             <StaggerItem key={c.t}>
               <HoverCard href={`/courses/${c.slug}`} style={{ background: "#fff", display: "flex", flexDirection: "column" }}>
@@ -158,11 +158,11 @@ export default function Home() {
         </Stagger>
       </section>
 
-      <section style={{ padding: "96px 56px", background: "#fff" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 64 }}>
+      <section className="etu-section" style={{ padding: "96px 56px", background: "#fff" }}>
+        <div className="etu-collapse" style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 64 }}>
           <Reveal>
             <SectionLabel>{t.home.fromFieldLabel}</SectionLabel>
-            <h2 style={{ fontFamily: A.fontHead, fontSize: 36, fontWeight: 400, color: A.navy, margin: 0, marginBottom: 32, letterSpacing: "-0.02em" }}>
+            <h2 className="etu-h2" style={{ fontFamily: A.fontHead, fontSize: 36, fontWeight: 400, color: A.navy, margin: 0, marginBottom: 32, letterSpacing: "-0.02em" }}>
               {t.home.recentNews}
             </h2>
             <article style={{ marginBottom: 28 }}>
@@ -172,14 +172,14 @@ export default function Home() {
                 <span style={{ color: A.gold }}>·</span>
                 <span>Campus tour</span>
               </div>
-              <h3 style={{ fontFamily: A.fontHead, fontSize: 26, fontWeight: 500, color: A.navy, margin: "12px 0 12px", lineHeight: 1.25 }}>
+              <h3 className="etu-h2" style={{ fontFamily: A.fontHead, fontSize: 26, fontWeight: 500, color: A.navy, margin: "12px 0 12px", lineHeight: 1.25 }}>
                 More than 30 students explore future opportunities at UCF
               </h3>
               <p style={{ fontSize: 15, lineHeight: 1.65, color: A.body, margin: 0 }}>
                 A full-day campus tour brought our Academic &amp; Career cohort to the University of Central Florida, where students met admissions officers and walked academic spaces firsthand.
               </p>
             </article>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 28 }}>
+            <div className="etu-collapse" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 28 }}>
               {newsTiles.map((a) => (
                 <article key={a.t}>
                   <ZoomImage src={a.img} alt={a.t} height={140} />
@@ -191,7 +191,7 @@ export default function Home() {
           </Reveal>
           <Reveal direction="left" delay={0.1}>
             <SectionLabel>{t.home.whatsNextLabel}</SectionLabel>
-            <h2 style={{ fontFamily: A.fontHead, fontSize: 36, fontWeight: 400, color: A.navy, margin: 0, marginBottom: 32, letterSpacing: "-0.02em" }}>
+            <h2 className="etu-h2" style={{ fontFamily: A.fontHead, fontSize: 36, fontWeight: 400, color: A.navy, margin: 0, marginBottom: 32, letterSpacing: "-0.02em" }}>
               {t.home.upcomingEvents}
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
@@ -231,14 +231,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section style={{ background: A.navy, color: "#fff", padding: "96px 56px", position: "relative", overflow: "hidden" }}>
+      <section className="etu-section" style={{ background: A.navy, color: "#fff", padding: "96px 56px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", bottom: 0, left: 0 }}>
           <ConcentricArcs size={300} color="#FCCC00" opacity={0.15} corner="bl" />
         </div>
-        <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 80, alignItems: "center" }}>
+        <div className="etu-collapse" style={{ position: "relative", display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 80, alignItems: "center" }}>
           <Reveal>
             <SectionLabel color={A.gold}>{t.home.joinLabel}</SectionLabel>
-            <h2 style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, margin: 0, letterSpacing: "-0.02em", lineHeight: 1.12 }}>
+            <h2 className="etu-h1" style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, margin: 0, letterSpacing: "-0.02em", lineHeight: 1.12 }}>
               {t.home.joinTitle}
             </h2>
             <p style={{ fontSize: 17, color: "rgba(255,255,255,0.82)", marginTop: 20, maxWidth: 500, lineHeight: 1.65 }}>
@@ -247,7 +247,7 @@ export default function Home() {
           </Reveal>
           <Reveal direction="left" delay={0.15}>
             <form style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div className="etu-collapse" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <input placeholder={t.home.firstName} style={{ padding: "14px 16px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)", color: "#fff", fontFamily: A.fontBody, fontSize: 15, borderRadius: 4 }} />
                 <input placeholder={t.home.lastName} style={{ padding: "14px 16px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)", color: "#fff", fontFamily: A.fontBody, fontSize: 15, borderRadius: 4 }} />
               </div>

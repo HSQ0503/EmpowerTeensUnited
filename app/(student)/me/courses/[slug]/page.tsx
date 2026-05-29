@@ -63,6 +63,7 @@ export default async function MyCourseHomePage({
           ← Programs
         </Link>
         <h1
+          className="etu-h1"
           style={{
             marginTop: 12,
             fontFamily: A.fontHead,
@@ -89,6 +90,7 @@ export default async function MyCourseHomePage({
       )}
 
       <div
+        className="etu-collapse"
         style={{
           background: "#fff",
           border: `1px solid ${A.rule}`,
@@ -164,6 +166,7 @@ export default async function MyCourseHomePage({
           return (
             <li
               key={w.id}
+              className="etu-collapse"
               style={{
                 background: "#fff",
                 border: `1px solid ${A.rule}`,

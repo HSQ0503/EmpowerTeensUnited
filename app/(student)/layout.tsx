@@ -18,6 +18,7 @@ export default async function StudentLayout({ children }: { children: ReactNode 
   return (
     <div style={{ minHeight: "100vh", background: A.paper, fontFamily: A.fontBody, color: A.ink }}>
       <header
+        className="etu-appbar"
         style={{
           background: "#fff",
           borderBottom: `1px solid ${A.rule}`,
@@ -28,11 +29,11 @@ export default async function StudentLayout({ children }: { children: ReactNode 
           gap: 32,
         }}
       >
-        <Link href="/me" style={{ textDecoration: "none", display: "inline-flex" }}>
+        <Link href="/me" className="etu-appbar-logo" style={{ textDecoration: "none", display: "inline-flex" }}>
           <EtuLockup height={42} color={A.navy} />
         </Link>
 
-        <nav style={{ display: "flex", gap: 28, justifyContent: "center" }}>
+        <nav className="etu-appbar-nav" style={{ display: "flex", gap: 28, justifyContent: "center", whiteSpace: "nowrap" }}>
           {navLinks.map(([label, href]) => (
             <Link
               key={href}
@@ -52,7 +53,7 @@ export default async function StudentLayout({ children }: { children: ReactNode 
           ))}
         </nav>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div className="etu-appbar-user" style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <div style={{ textAlign: "right", lineHeight: 1.15 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: A.navy }}>
               {profile.firstName} {profile.lastName}
@@ -84,7 +85,7 @@ export default async function StudentLayout({ children }: { children: ReactNode 
         </div>
       </header>
 
-      <main style={{ padding: "48px 32px 80px" }}>{children}</main>
+      <main className="etu-px" style={{ padding: "48px 32px 80px" }}>{children}</main>
     </div>
   );
 }

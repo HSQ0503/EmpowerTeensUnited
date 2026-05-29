@@ -61,6 +61,7 @@ export default async function AdminMentorshipPage({
           Mentorship
         </div>
         <h1
+          className="etu-h2"
           style={{
             fontFamily: A.fontHead,
             fontSize: 32,
@@ -86,6 +87,7 @@ export default async function AdminMentorshipPage({
       )}
 
       <div
+        className="etu-collapse"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
@@ -134,6 +136,7 @@ export default async function AdminMentorshipPage({
           overflow: "hidden",
         }}
       >
+        <div className="etu-table-wrap">
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr
@@ -307,6 +310,7 @@ export default async function AdminMentorshipPage({
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

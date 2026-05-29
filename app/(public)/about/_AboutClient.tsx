@@ -55,13 +55,13 @@ export default function AboutClient({
         image={PHOTOS.heroLibrary}
       />
 
-      <section style={{ padding: "72px 56px", background: A.bg, borderBottom: `1px solid ${A.rule}` }}>
-        <Stagger style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>
+      <section className="etu-px" style={{ padding: "72px 56px", background: A.bg, borderBottom: `1px solid ${A.rule}` }}>
+        <Stagger className="etu-collapse-2" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>
           {stats.map((s) => (
             <StaggerItem key={s.l}>
               <HoverCard lift={4} style={{ background: "#fff", padding: "32px 28px", border: `1px solid ${A.rule}`, position: "relative" }}>
                 <div style={{ position: "absolute", top: 0, left: 0, width: 48, height: 3, background: A.gold }} />
-                <div style={{ fontFamily: A.fontHead, fontSize: 56, fontWeight: 500, color: A.navy, lineHeight: 1, letterSpacing: "-0.03em" }}>{s.n}</div>
+                <div className="etu-display" style={{ fontFamily: A.fontHead, fontSize: 56, fontWeight: 500, color: A.navy, lineHeight: 1, letterSpacing: "-0.03em" }}>{s.n}</div>
                 <div style={{ marginTop: 12, fontSize: 13, letterSpacing: 1.5, textTransform: "uppercase", color: A.navy, fontWeight: 700 }}>{s.l}</div>
                 <div style={{ marginTop: 4, fontSize: 13, color: A.muted }}>{s.sub}</div>
               </HoverCard>
@@ -70,23 +70,23 @@ export default function AboutClient({
         </Stagger>
       </section>
 
-      <section style={{ padding: "96px 56px", background: "#fff" }}>
+      <section className="etu-section" style={{ padding: "96px 56px", background: "#fff" }}>
         <Reveal style={{ textAlign: "center", marginBottom: 56 }}>
           <SectionLabel>{t.about.synergyLabel}</SectionLabel>
-          <h2 style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, color: A.navy, margin: 0, letterSpacing: "-0.02em" }}>
+          <h2 className="etu-h1" style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, color: A.navy, margin: 0, letterSpacing: "-0.02em" }}>
             {t.about.synergyTitle}
           </h2>
           <p style={{ fontFamily: A.fontBody, fontSize: 17, color: A.muted, maxWidth: 620, margin: "20px auto 0", lineHeight: 1.65 }}>
             {t.about.synergyIntro}
           </p>
         </Reveal>
-        <Stagger style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, border: `1px solid ${A.rule}` }}>
+        <Stagger className="etu-collapse-2" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, border: `1px solid ${A.rule}` }}>
           {mvp.map((c, i) => (
             <StaggerItem key={c.t} style={{ borderRight: i < 2 ? `1px solid ${A.rule}` : "none" }}>
               <ZoomImage src={c.img} alt={c.t} height={220} />
               <div style={{ padding: "32px 32px 36px" }}>
                 <div style={{ fontFamily: A.fontBody, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", fontWeight: 700, color: A.gold, marginBottom: 12 }}>0{i + 1} / 03</div>
-                <h3 style={{ fontFamily: A.fontHead, fontSize: 30, fontWeight: 500, color: A.navy, margin: 0, marginBottom: 14, letterSpacing: "-0.02em" }}>{c.t}</h3>
+                <h3 className="etu-h2" style={{ fontFamily: A.fontHead, fontSize: 30, fontWeight: 500, color: A.navy, margin: 0, marginBottom: 14, letterSpacing: "-0.02em" }}>{c.t}</h3>
                 <p style={{ fontSize: 15, lineHeight: 1.7, color: A.body, margin: 0 }}>{c.p}</p>
               </div>
             </StaggerItem>
@@ -94,11 +94,11 @@ export default function AboutClient({
         </Stagger>
       </section>
 
-      <section style={{ padding: "96px 56px", background: A.bg }}>
-        <Reveal style={{ maxWidth: 920, margin: "0 auto", display: "grid", gridTemplateColumns: "120px 1fr", gap: 40, alignItems: "start" }}>
+      <section className="etu-section" style={{ padding: "96px 56px", background: A.bg }}>
+        <Reveal className="etu-collapse" style={{ maxWidth: 920, margin: "0 auto", display: "grid", gridTemplateColumns: "120px 1fr", gap: 40, alignItems: "start" }}>
           <div style={{ fontFamily: A.fontHead, fontSize: 120, color: A.gold, lineHeight: 0.7, fontWeight: 700 }}>&ldquo;</div>
           <div>
-            <p style={{ fontFamily: A.fontHead, fontSize: 32, fontWeight: 400, fontStyle: "italic", color: A.navy, margin: 0, lineHeight: 1.35, letterSpacing: "-0.01em" }}>
+            <p className="etu-h2" style={{ fontFamily: A.fontHead, fontSize: 32, fontWeight: 400, fontStyle: "italic", color: A.navy, margin: 0, lineHeight: 1.35, letterSpacing: "-0.01em" }}>
               {t.about.quoteBody}
             </p>
             <div style={{ marginTop: 28, display: "flex", alignItems: "center", gap: 16 }}>
@@ -112,10 +112,10 @@ export default function AboutClient({
         </Reveal>
       </section>
 
-      <section style={{ padding: "96px 56px", background: "#fff" }}>
+      <section className="etu-section" style={{ padding: "96px 56px", background: "#fff" }}>
         <Reveal style={{ textAlign: "center", marginBottom: 56 }}>
           <SectionLabel>{t.about.teamLabel}</SectionLabel>
-          <h2 style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, color: A.navy, margin: 0, letterSpacing: "-0.02em" }}>
+          <h2 className="etu-h1" style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, color: A.navy, margin: 0, letterSpacing: "-0.02em" }}>
             {t.about.teamTitle}
           </h2>
         </Reveal>
@@ -154,18 +154,18 @@ export default function AboutClient({
         )}
       </section>
 
-      <section style={{ padding: "96px 56px", background: A.navy, color: "#fff", position: "relative", overflow: "hidden" }}>
+      <section className="etu-section" style={{ padding: "96px 56px", background: A.navy, color: "#fff", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 0, right: 0 }}>
           <ConcentricArcs size={300} color="#FCCC00" opacity={0.12} corner="tr" />
         </div>
         <Reveal style={{ position: "relative", textAlign: "center", marginBottom: 56 }}>
           <SectionLabel color={A.gold}>{t.about.journeyLabel}</SectionLabel>
-          <h2 style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, margin: 0, letterSpacing: "-0.02em" }}>{t.about.journeyTitle}</h2>
+          <h2 className="etu-h1" style={{ fontFamily: A.fontHead, fontSize: 44, fontWeight: 400, margin: 0, letterSpacing: "-0.02em" }}>{t.about.journeyTitle}</h2>
           <p style={{ fontSize: 17, color: "rgba(255,255,255,0.78)", maxWidth: 620, margin: "20px auto 0", lineHeight: 1.65 }}>
             {t.about.journeyIntro}
           </p>
         </Reveal>
-        <Stagger style={{ position: "relative", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>
+        <Stagger className="etu-collapse-2" style={{ position: "relative", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>
           {journey.map((m) => (
             <StaggerItem key={m.y} style={{ position: "relative", paddingTop: 32 }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "rgba(255,255,255,0.18)" }} />

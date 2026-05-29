@@ -64,7 +64,7 @@ export default async function UnsubscribePage({
   if (state.kind === "missing") {
     return (
       <main style={wrap}>
-        <h1 style={headingStyle}>Missing unsubscribe token</h1>
+        <h1 className="etu-h2" style={headingStyle}>Missing unsubscribe token</h1>
         <p style={bodyStyle}>
           This link looks incomplete. Please use the unsubscribe link from one
           of our emails.
@@ -84,7 +84,7 @@ export default async function UnsubscribePage({
   if (state.kind === "unknown") {
     return (
       <main style={wrap}>
-        <h1 style={headingStyle}>Unsubscribe link not found</h1>
+        <h1 className="etu-h2" style={headingStyle}>Unsubscribe link not found</h1>
         <p style={bodyStyle}>
           We couldn&apos;t match this link to a recipient. If you keep getting
           our emails, reply to any of them and we&apos;ll remove you manually.
@@ -103,7 +103,7 @@ export default async function UnsubscribePage({
 
   return (
     <main style={wrap}>
-      <h1 style={headingStyle}>You&apos;re unsubscribed</h1>
+      <h1 className="etu-h2" style={headingStyle}>You&apos;re unsubscribed</h1>
       <p style={bodyStyle}>
         <strong>{state.email}</strong> won&apos;t receive any more broadcast
         emails from Empower Teens United. Important transactional emails (event

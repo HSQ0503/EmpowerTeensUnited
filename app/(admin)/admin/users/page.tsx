@@ -76,6 +76,7 @@ export default async function AdminUsersPage({
           People
         </div>
         <h1
+          className="etu-h2"
           style={{
             fontFamily: A.fontHead,
             fontSize: 32,
@@ -94,6 +95,7 @@ export default async function AdminUsersPage({
       </div>
 
       <div
+        className="etu-collapse-2"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
@@ -129,7 +131,7 @@ export default async function AdminUsersPage({
           ))}
         </div>
 
-        <form method="get" style={{ display: "flex", gap: 8 }}>
+        <form method="get" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           {isRole(role) && <input type="hidden" name="role" value={role} />}
           <input
             type="search"
@@ -177,6 +179,7 @@ export default async function AdminUsersPage({
           overflow: "hidden",
         }}
       >
+        <div className="etu-table-wrap">
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr
@@ -317,6 +320,7 @@ export default async function AdminUsersPage({
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

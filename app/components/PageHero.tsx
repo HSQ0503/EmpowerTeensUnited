@@ -58,7 +58,7 @@ export function PageHero({
           <ConcentricArcs size={280} color="#FCCC00" opacity={0.22} corner="tr" />
         </motion.div>
       </div>
-      <div style={{ position: "relative", padding: "72px 56px 84px" }}>
+      <div className="etu-px" style={{ position: "relative", padding: "72px 56px 84px" }}>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

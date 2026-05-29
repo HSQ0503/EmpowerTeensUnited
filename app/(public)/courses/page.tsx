@@ -24,11 +24,12 @@ export default async function CoursesListPage() {
         image={PHOTOS.heroLibrary}
       />
 
-      <section style={{ padding: "64px 56px 96px", background: "#fff" }}>
+      <section className="etu-px" style={{ padding: "64px 56px 96px", background: "#fff" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ marginBottom: 32 }}>
             <SectionLabel>Active programs</SectionLabel>
             <h2
+              className="etu-h2"
               style={{
                 fontFamily: A.fontHead,
                 fontSize: 36,
@@ -48,6 +49,7 @@ export default async function CoursesListPage() {
             </p>
           ) : (
             <div
+              className="etu-collapse"
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",

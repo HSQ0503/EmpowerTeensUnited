@@ -21,6 +21,7 @@ export function HomeHero() {
   return (
     <section
       ref={ref}
+      className="etu-homehero"
       style={{
         position: "relative",
         height: 680,
@@ -58,6 +59,7 @@ export function HomeHero() {
       </div>
 
       <motion.div
+        className="etu-homehero-inner"
         style={{
           position: "relative",
           padding: "150px 56px 90px",
@@ -160,7 +162,7 @@ export function HomeHero() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.85, ease: easeOutExpo, delay: 1.0 }}
-          style={{ marginTop: 36, display: "flex", gap: 14 }}
+          style={{ marginTop: 36, display: "flex", gap: 14, flexWrap: "wrap" }}
         >
           <Button href="/courses">{t.cta.explorePrograms}</Button>
           <Button href="/about" primary={false} dark icon={false}>

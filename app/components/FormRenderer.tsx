@@ -18,6 +18,7 @@ export function FormRenderer({
   return (
     <form
       action={action}
+      className="etu-px"
       style={{
         background: "#fff",
         border: `1px solid ${A.rule}`,

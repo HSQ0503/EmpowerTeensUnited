@@ -58,6 +58,7 @@ export default async function MentorDashboardPage() {
           Mentor portal
         </div>
         <h1
+          className="etu-h1"
           style={{
             fontFamily: A.fontHead,
             fontSize: 38,
@@ -94,6 +95,7 @@ export default async function MentorDashboardPage() {
               <Link
                 key={a.id}
                 href={`/mentor/students/${a.student.id}`}
+                className="etu-collapse"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "1fr auto",

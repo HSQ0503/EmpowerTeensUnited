@@ -47,6 +47,7 @@ export default async function BroadcastsListPage() {
   return (
     <div>
       <div
+        className="etu-stack"
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -68,6 +69,7 @@ export default async function BroadcastsListPage() {
             Email
           </div>
           <h1
+            className="etu-h2"
             style={{
               fontFamily: A.fontHead,
               fontSize: 32,
@@ -107,6 +109,7 @@ export default async function BroadcastsListPage() {
           overflow: "hidden",
         }}
       >
+        <div className="etu-table-wrap">
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr
@@ -191,6 +194,7 @@ export default async function BroadcastsListPage() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

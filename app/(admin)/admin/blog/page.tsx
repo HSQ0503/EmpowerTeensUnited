@@ -17,6 +17,7 @@ export default async function AdminBlogListPage() {
   return (
     <div>
       <div
+        className="etu-stack"
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -38,6 +39,7 @@ export default async function AdminBlogListPage() {
             Stories
           </div>
           <h1
+            className="etu-h2"
             style={{
               fontFamily: A.fontHead,
               fontSize: 32,
@@ -77,6 +79,7 @@ export default async function AdminBlogListPage() {
           overflow: "hidden",
         }}
       >
+        <div className="etu-table-wrap">
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr
@@ -154,6 +157,7 @@ export default async function AdminBlogListPage() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

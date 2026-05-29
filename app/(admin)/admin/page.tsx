@@ -91,6 +91,7 @@ export default async function AdminDashboardPage() {
     <div>
       {/* Hero greeting */}
       <section
+        className="etu-px"
         style={{
           background: `linear-gradient(135deg, ${A.navy} 0%, ${A.navyDark} 100%)`,
           color: "#fff",
@@ -127,6 +128,7 @@ export default async function AdminDashboardPage() {
           {greeting}, admin
         </div>
         <h1
+          className="etu-h1"
           style={{
             fontFamily: A.fontHead,
             fontSize: 36,
@@ -155,6 +157,7 @@ export default async function AdminDashboardPage() {
 
       {/* KPI row */}
       <div
+        className="etu-collapse-2"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
@@ -177,6 +180,7 @@ export default async function AdminDashboardPage() {
 
       {/* Main grid: action items + activity feed */}
       <div
+        className="etu-collapse"
         style={{
           display: "grid",
           gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
@@ -241,6 +245,7 @@ export default async function AdminDashboardPage() {
 
       {/* Activity grid */}
       <div
+        className="etu-collapse"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, minmax(0, 1fr))",

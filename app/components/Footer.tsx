@@ -45,6 +45,7 @@ export function Footer() {
   return (
     <footer style={{ background: A.navy, color: "#fff", fontFamily: A.fontBody }}>
       <div
+        className="etu-px etu-stack"
         style={{
           background: "#fff",
           color: A.navy,
@@ -54,6 +55,7 @@ export function Footer() {
           justifyContent: "space-between",
           gap: 32,
           borderBottom: `1px solid ${A.rule}`,
+          flexWrap: "wrap",
         }}
       >
         <div
@@ -75,6 +77,7 @@ export function Footer() {
             alignItems: "center",
             flex: 1,
             justifyContent: "flex-end",
+            flexWrap: "wrap",
           }}
         >
           {PARTNERS.map((p) => (
@@ -98,6 +101,7 @@ export function Footer() {
         </div>
       </div>
       <div
+        className="etu-px etu-collapse-2"
         style={{
           padding: "64px 56px 40px",
           display: "grid",
@@ -190,6 +194,7 @@ export function Footer() {
         ))}
       </div>
       <div
+        className="etu-px etu-stack"
         style={{
           padding: "20px 56px",
           borderTop: "1px solid rgba(255,255,255,0.12)",
@@ -198,6 +203,8 @@ export function Footer() {
           alignItems: "center",
           fontSize: 12,
           color: "rgba(255,255,255,0.6)",
+          gap: 12,
+          flexWrap: "wrap",
         }}
       >
         <div>{t.footer.copy}</div>

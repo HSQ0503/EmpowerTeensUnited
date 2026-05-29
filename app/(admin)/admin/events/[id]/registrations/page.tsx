@@ -63,6 +63,7 @@ export default async function EventFunnelPage({
       </div>
 
       <div
+        className="etu-collapse-2"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
@@ -114,6 +115,7 @@ export default async function EventFunnelPage({
           overflow: "hidden",
         }}
       >
+        <div className="etu-table-wrap">
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr
@@ -176,6 +178,7 @@ export default async function EventFunnelPage({
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

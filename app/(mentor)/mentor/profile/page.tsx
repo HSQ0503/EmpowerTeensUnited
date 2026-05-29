@@ -36,6 +36,7 @@ export default async function MentorProfilePage({
           ← Mentor dashboard
         </Link>
         <h1
+          className="etu-h1"
           style={{
             marginTop: 12,
             fontFamily: A.fontHead,
@@ -94,6 +95,7 @@ export default async function MentorProfilePage({
 
       <form
         action={updateMentorProfileAction}
+        className="etu-px"
         style={{
           background: "#fff",
           border: `1px solid ${A.rule}`,
@@ -105,7 +107,7 @@ export default async function MentorProfilePage({
           boxShadow: "0 12px 32px -24px rgba(15, 69, 102, 0.2)",
         }}
       >
-        <div style={s.fieldRow}>
+        <div className="etu-collapse" style={s.fieldRow}>
           <div>
             <label htmlFor="first_name" style={s.fieldLabel}>
               First name
@@ -194,7 +196,7 @@ export default async function MentorProfilePage({
         </div>
 
         <div style={{ marginTop: 8 }}>
-          <button type="submit" style={s.primaryButton}>
+          <button type="submit" className="etu-fullw" style={s.primaryButton}>
             Save changes
           </button>
         </div>

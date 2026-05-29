@@ -39,9 +39,10 @@ export default async function ContactPage({
         image={PHOTOS.heroLibrary}
       />
 
-      <section style={{ padding: "64px 56px 96px", background: "#fff" }}>
+      <section className="etu-px" style={{ padding: "64px 56px 96px", background: "#fff" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div
+            className="etu-collapse-2"
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(3, 1fr)",
@@ -109,6 +110,7 @@ export default async function ContactPage({
           <div style={{ maxWidth: 640 }}>
             <SectionLabel>Send a message</SectionLabel>
             <h2
+              className="etu-h2"
               style={{
                 fontFamily: A.fontHead,
                 fontSize: 36,

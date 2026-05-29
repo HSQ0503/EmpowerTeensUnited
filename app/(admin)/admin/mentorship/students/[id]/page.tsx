@@ -70,6 +70,7 @@ export default async function AdminStudentDetailPage({
           ← Mentorship
         </Link>
         <h1
+          className="etu-h1"
           style={{
             marginTop: 12,
             fontFamily: A.fontHead,

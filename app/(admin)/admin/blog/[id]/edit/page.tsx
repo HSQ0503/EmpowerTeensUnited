@@ -42,6 +42,7 @@ export default async function EditBlogPostPage({
           ← Blog
         </Link>
         <h1
+          className="etu-h2"
           style={{
             marginTop: 12,
             fontFamily: A.fontHead,

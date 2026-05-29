@@ -87,6 +87,7 @@ export default async function MentorStudentPage({
           ← My students
         </Link>
         <h1
+          className="etu-h1"
           style={{
             marginTop: 12,
             fontFamily: A.fontHead,
@@ -157,6 +158,7 @@ export default async function MentorStudentPage({
                   }}
                 >
                   <summary
+                    className="etu-stack"
                     style={{
                       cursor: "pointer",
                       listStyle: "none",

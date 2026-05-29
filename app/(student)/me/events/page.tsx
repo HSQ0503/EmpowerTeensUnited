@@ -39,6 +39,7 @@ export default async function MyEventsPage() {
           Events
         </div>
         <h1
+          className="etu-h1"
           style={{
             fontFamily: A.fontHead,
             fontSize: 38,
@@ -95,6 +96,7 @@ export default async function MyEventsPage() {
           {withQr.map(({ reg, qrDataUrl }) => (
             <div
               key={reg.id}
+              className="etu-collapse"
               style={{
                 background: "#fff",
                 border: `1px solid ${A.rule}`,
@@ -104,7 +106,7 @@ export default async function MyEventsPage() {
                 gridTemplateColumns: "1fr auto",
                 gap: 24,
                 alignItems: "center",
-                boxShadow: "0 12px 32px -28px rgba(15, 69, 102, 0.2)",
+                boxShadow: "0 12px 32px -28px rgba(15, 69, 102, 0.2)"
               }}
             >
               <div>

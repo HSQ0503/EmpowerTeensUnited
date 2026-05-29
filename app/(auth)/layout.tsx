@@ -41,6 +41,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       </Link>
 
       <div
+        className="etu-px"
         style={{
           position: "relative",
           zIndex: 1,

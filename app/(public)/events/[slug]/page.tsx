@@ -74,6 +74,7 @@ export default async function EventDetailPage({
           <ConcentricArcs size={300} color="#FCCC00" opacity={0.18} corner="tr" />
         </div>
         <div
+          className="etu-px"
           style={{
             position: "relative",
             padding: "64px 56px",
@@ -140,8 +141,9 @@ export default async function EventDetailPage({
         </div>
       </section>
 
-      <section style={{ padding: "64px 56px 96px", background: "#fff" }}>
+      <section className="etu-px" style={{ padding: "64px 56px 96px", background: "#fff" }}>
         <div
+          className="etu-collapse"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 340px",

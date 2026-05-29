@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import { useState } from "react";
 import { A } from "./tokens";
 import { EtuLockup } from "./Logo";
 import { LangToggle } from "./LangToggle";
@@ -16,6 +17,7 @@ function isActive(pathname: string, href: string) {
 export function Nav({ dashboardHref }: { dashboardHref?: string | null }) {
   const { t } = useLang();
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
   const items: Array<[string, string, string]> = [
     ["home", t.nav.home, "/"],
     ["about", t.nav.about, "/about"],
@@ -33,6 +35,7 @@ export function Nav({ dashboardHref }: { dashboardHref?: string | null }) {
       style={{ background: "#fff", borderBottom: `1px solid ${A.rule}`, position: "relative", zIndex: 10 }}
     >
       <div
+        className="etu-px"
         style={{
           background: A.navyDark,
           color: "#fff",
@@ -47,14 +50,15 @@ export function Nav({ dashboardHref }: { dashboardHref?: string | null }) {
       >
         <div style={{ display: "flex", gap: 24, opacity: 0.85 }}>
           <span>+1 (407) 413-7384</span>
-          <span>info@empowerteensunited.org</span>
+          <span className="etu-desktop-only">info@empowerteensunited.org</span>
         </div>
         <div style={{ display: "flex", gap: 16, alignItems: "center", opacity: 0.95 }}>
-          <span style={{ opacity: 0.85 }}>{t.nav.hours}</span>
+          <span className="etu-desktop-only" style={{ opacity: 0.85 }}>{t.nav.hours}</span>
           <LangToggle dark />
         </div>
       </div>
       <div
+        className="etu-px etu-navbar"
         style={{
           padding: "20px 56px",
           display: "grid",
@@ -68,6 +72,7 @@ export function Nav({ dashboardHref }: { dashboardHref?: string | null }) {
           <EtuLockup height={56} color={A.navy} />
         </Link>
         <nav
+          className="etu-desktop-only"
           style={{
             display: "flex",
             gap: 36,
@@ -116,8 +121,42 @@ export function Nav({ dashboardHref }: { dashboardHref?: string | null }) {
             );
           })}
         </nav>
-        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-          <motion.span style={{ display: "inline-block" }} whileHover={{ y: -2, boxShadow: "0 14px 24px -14px rgba(252,204,0,0.6)" }} whileTap={{ scale: 0.96 }} transition={{ type: "spring", stiffness: 360, damping: 22 }}>
+        <div style={{ display: "flex", gap: 12, alignItems: "center", justifyContent: "flex-end" }}>
+          <button
+            type="button"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((o) => !o)}
+            className="etu-mobile-only"
+            style={{
+              background: "transparent",
+              border: `1.5px solid ${A.rule}`,
+              borderRadius: 6,
+              width: 44,
+              height: 44,
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              color: A.navy,
+            }}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              {menuOpen ? (
+                <>
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                  <line x1="6" y1="18" x2="18" y2="6" />
+                </>
+              ) : (
+                <>
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </>
+              )}
+            </svg>
+          </button>
+          <motion.span className="etu-desktop-only" style={{ display: "inline-block" }} whileHover={{ y: -2, boxShadow: "0 14px 24px -14px rgba(252,204,0,0.6)" }} whileTap={{ scale: 0.96 }} transition={{ type: "spring", stiffness: 360, damping: 22 }}>
             <Link
               href="/contact"
               style={{
@@ -137,7 +176,7 @@ export function Nav({ dashboardHref }: { dashboardHref?: string | null }) {
               {t.nav.donate}
             </Link>
           </motion.span>
-          <motion.span style={{ display: "inline-block" }} whileHover={{ y: -2, background: "rgba(15,69,102,0.05)" }} whileTap={{ scale: 0.96 }} transition={{ type: "spring", stiffness: 360, damping: 22 }}>
+          <motion.span className="etu-desktop-only" style={{ display: "inline-block" }} whileHover={{ y: -2, background: "rgba(15,69,102,0.05)" }} whileTap={{ scale: 0.96 }} transition={{ type: "spring", stiffness: 360, damping: 22 }}>
             <Link
               href={dashboardHref ?? "/sign-in"}
               style={{
@@ -158,6 +197,77 @@ export function Nav({ dashboardHref }: { dashboardHref?: string | null }) {
           </motion.span>
         </div>
       </div>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            className="etu-mobile-only"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            style={{ overflow: "hidden", background: "#fff", borderTop: `1px solid ${A.rule}` }}
+          >
+            <nav style={{ display: "flex", flexDirection: "column", padding: "8px 0" }}>
+              {items.map(([key, label, href]) => {
+                const active = isActive(pathname, href);
+                return (
+                  <Link
+                    key={key}
+                    href={href}
+                    onClick={() => setMenuOpen(false)}
+                    style={{
+                      padding: "14px 20px",
+                      fontSize: 16,
+                      fontWeight: 600,
+                      color: active ? A.navy : A.ink,
+                      textDecoration: "none",
+                      borderLeft: `3px solid ${active ? A.gold : "transparent"}`,
+                    }}
+                  >
+                    {label}
+                  </Link>
+                );
+              })}
+            </nav>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "12px 20px 20px" }}>
+              <Link
+                href="/contact"
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  textAlign: "center",
+                  background: A.gold,
+                  color: A.navy,
+                  padding: "14px 22px",
+                  borderRadius: 4,
+                  fontWeight: 700,
+                  fontSize: 15,
+                  textDecoration: "none",
+                }}
+              >
+                {t.nav.donate}
+              </Link>
+              <Link
+                href={dashboardHref ?? "/sign-in"}
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  textAlign: "center",
+                  background: dashboardHref ? A.navy : "transparent",
+                  color: dashboardHref ? "#fff" : A.ink,
+                  border: `1.5px solid ${dashboardHref ? A.navy : A.rule}`,
+                  padding: "13px 18px",
+                  borderRadius: 4,
+                  fontWeight: 600,
+                  fontSize: 15,
+                  textDecoration: "none",
+                }}
+              >
+                {dashboardHref ? t.nav.dashboard : t.nav.signIn}
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }

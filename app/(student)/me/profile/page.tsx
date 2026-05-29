@@ -29,6 +29,7 @@ export default async function StudentProfilePage({
           Account
         </div>
         <h1
+          className="etu-h1"
           style={{
             fontFamily: A.fontHead,
             fontSize: 38,
@@ -52,6 +53,7 @@ export default async function StudentProfilePage({
 
       <form
         action={updateProfileAction}
+        className="etu-px"
         style={{
           background: "#fff",
           border: `1px solid ${A.rule}`,
@@ -63,7 +65,7 @@ export default async function StudentProfilePage({
           boxShadow: "0 12px 32px -24px rgba(15, 69, 102, 0.2)",
         }}
       >
-        <div style={s.fieldRow}>
+        <div className="etu-collapse" style={s.fieldRow}>
           <div>
             <label htmlFor="first_name" style={s.fieldLabel}>First name</label>
             <input
@@ -113,7 +115,7 @@ export default async function StudentProfilePage({
           />
         </div>
 
-        <div style={{ ...s.fieldRow, gridTemplateColumns: "1fr 2fr" }}>
+        <div className="etu-collapse" style={{ ...s.fieldRow, gridTemplateColumns: "1fr 2fr" }}>
           <div>
             <label htmlFor="grade" style={s.fieldLabel}>Grade</label>
             <select
@@ -139,7 +141,7 @@ export default async function StudentProfilePage({
           </div>
         </div>
 
-        <div style={s.fieldRow}>
+        <div className="etu-collapse" style={s.fieldRow}>
           <div>
             <label htmlFor="parent_email" style={s.fieldLabel}>Parent / guardian email</label>
             <input
@@ -163,7 +165,7 @@ export default async function StudentProfilePage({
         </div>
 
         <div style={{ marginTop: 8 }}>
-          <button type="submit" style={s.primaryButton}>Save changes</button>
+          <button type="submit" className="etu-fullw" style={s.primaryButton}>Save changes</button>
         </div>
       </form>
     </div>
