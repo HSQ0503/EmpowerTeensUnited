@@ -1,0 +1,10 @@
+{
+  "projectId": "prj_35d92433",
+  "projectName": "empowerteensunited",
+  "environments": {
+    "development": ".env"
+  },
+  "ignore": [
+    ".env.local"
+  ]
+}
