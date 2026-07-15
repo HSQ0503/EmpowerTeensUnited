@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { EtuLockup } from "@/app/components/Logo";
@@ -36,11 +36,6 @@ export function AdminShell({
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-
-  // Close the drawer on navigation.
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   return (
     <div
@@ -157,6 +152,7 @@ export function AdminShell({
               <Link
                 key={href}
                 href={href}
+                onClick={() => setOpen(false)}
                 style={{
                   padding: "10px 20px",
                   color: active ? "#fff" : "rgba(255,255,255,0.85)",
