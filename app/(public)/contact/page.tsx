@@ -29,6 +29,9 @@ export default async function ContactPage({
   searchParams: Promise<{ sent?: string; error?: string }>;
 }) {
   const { sent, error } = await searchParams;
+  // Server-rendered per request; the timestamp feeds the bot time-trap check.
+  // eslint-disable-next-line react-hooks/purity -- intentional per-request value
+  const renderedAt = Date.now();
 
   return (
     <>
@@ -149,6 +152,21 @@ export default async function ContactPage({
                 }}
               >
                 {error && <div style={s.alertError}>{error}</div>}
+
+                <input type="hidden" name="_t" value={renderedAt} />
+                <div
+                  aria-hidden="true"
+                  style={{ position: "absolute", left: -9999, top: -9999, height: 0, overflow: "hidden" }}
+                >
+                  <label htmlFor="website">Website</label>
+                  <input
+                    id="website"
+                    name="website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
 
                 <div>
                   <label htmlFor="name" style={s.fieldLabel}>

@@ -7,7 +7,23 @@ import {
   sendContactAutoreply,
 } from "@/lib/email/transactional";
 
+const MIN_FILL_MS = 3000;
+
+function isLikelyBot(formData: FormData): boolean {
+  // Honeypot: hidden field humans never see; bots auto-fill it.
+  if (String(formData.get("website") ?? "").trim()) return true;
+  // Time trap: humans take longer than 3s to fill four fields.
+  const renderedAt = Number(formData.get("_t"));
+  if (Number.isFinite(renderedAt) && Date.now() - renderedAt < MIN_FILL_MS) {
+    return true;
+  }
+  return false;
+}
+
 export async function submitContactAction(formData: FormData) {
+  // Pretend success so bots don't learn they were filtered.
+  if (isLikelyBot(formData)) redirect("/contact?sent=1");
+
   const name = String(formData.get("name") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const phoneRaw = String(formData.get("phone") ?? "").trim();

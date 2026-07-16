@@ -35,3 +35,23 @@ export async function markArchivedAction(messageId: string) {
 export async function markNewAction(messageId: string) {
   return setContactStatusAction(messageId, "new");
 }
+
+export async function quickArchiveAction(messageId: string) {
+  await requireRole("admin");
+  await prisma.contactMessage.update({
+    where: { id: messageId },
+    data: { status: "archived" },
+  });
+  revalidatePath("/admin/contact");
+  redirect("/admin/contact");
+}
+
+export async function archiveAllNewAction() {
+  await requireRole("admin");
+  await prisma.contactMessage.updateMany({
+    where: { status: "new" },
+    data: { status: "archived" },
+  });
+  revalidatePath("/admin/contact");
+  redirect("/admin/contact");
+}
