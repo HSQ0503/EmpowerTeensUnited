@@ -5,6 +5,7 @@ import { A } from "@/app/components/tokens";
 import { authStyles as s } from "@/app/(auth)/_styles";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { createAndSendCampaignAction } from "../actions";
+import { SandboxNotice } from "../_SandboxNotice";
 
 export const metadata = { title: "New broadcast · Admin" };
 
@@ -98,6 +99,8 @@ export default async function NewBroadcastPage({
           you click <strong>Send now</strong> — drafts don&apos;t pre-snapshot.
         </p>
       </div>
+
+      <SandboxNotice />
 
       <form
         action={createAndSendCampaignAction}
