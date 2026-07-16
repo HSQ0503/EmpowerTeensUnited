@@ -113,7 +113,7 @@ export default async function AdminBlogListPage() {
               </tr>
             ) : (
               posts.map((p) => (
-                <tr key={p.id} style={{ borderBottom: `1px solid ${A.rule}` }}>
+                <tr className="etu-row-hover" key={p.id} style={{ borderBottom: `1px solid ${A.rule}` }}>
                   <td style={{ ...td, fontWeight: 600, color: A.navy }}>
                     {p.title}
                   </td>

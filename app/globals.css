@@ -149,6 +149,23 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 }
 .etu-table-wrap > table { min-width: max-content; }
 
+/* Admin sidebar nav links: subtle hover feedback without layout shift. */
+.etu-admin-navlink {
+  transition: background 150ms ease, color 150ms ease;
+}
+.etu-admin-navlink:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* Admin table rows: hover highlight so rows read as interactive. */
+.etu-row-hover {
+  transition: background 150ms ease;
+}
+.etu-row-hover:hover {
+  background: rgba(15, 69, 102, 0.04);
+}
+
 /* Horizontal scroll strip for tab/nav rows that can't all fit. */
 .etu-scroll-x {
   overflow-x: auto;

@@ -4,6 +4,7 @@ import { requireRole } from "@/lib/auth";
 import { A } from "@/app/components/tokens";
 import { formatShortDate } from "@/lib/dates";
 import type { CampaignStatus } from "@/prisma/generated/client/client";
+import { SandboxNotice } from "./_SandboxNotice";
 
 export const metadata = { title: "Broadcasts · Admin" };
 
@@ -101,6 +102,8 @@ export default async function BroadcastsListPage() {
         </Link>
       </div>
 
+      <SandboxNotice />
+
       <div
         style={{
           background: "#fff",
@@ -146,6 +149,7 @@ export default async function BroadcastsListPage() {
                 const style = STATUS_STYLES[c.status];
                 return (
                   <tr
+                    className="etu-row-hover"
                     key={c.id}
                     style={{ borderBottom: `1px solid ${A.rule}` }}
                   >

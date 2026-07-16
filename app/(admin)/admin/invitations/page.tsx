@@ -193,7 +193,7 @@ export default async function InvitationsPage({
                     ? "Expired"
                     : "Pending";
               return (
-                <tr key={i.id} style={{ borderTop: `1px solid ${A.rule}` }}>
+                <tr className="etu-row-hover" key={i.id} style={{ borderTop: `1px solid ${A.rule}` }}>
                   <td style={{ padding: "14px 18px", color: A.ink, fontWeight: 600 }}>{i.email}</td>
                   <td style={{ padding: "14px 18px", textTransform: "capitalize", color: A.body }}>{i.role}</td>
                   <td style={{ padding: "14px 18px", color: A.muted }}>

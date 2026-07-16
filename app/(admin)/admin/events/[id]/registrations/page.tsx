@@ -143,7 +143,7 @@ export default async function EventFunnelPage({
               </tr>
             ) : (
               regs.map((r) => (
-                <tr key={r.id} style={{ borderBottom: `1px solid ${A.rule}` }}>
+                <tr className="etu-row-hover" key={r.id} style={{ borderBottom: `1px solid ${A.rule}` }}>
                   <td style={{ ...td, fontWeight: 600, color: A.navy }}>{r.name}</td>
                   <td style={{ ...td, color: A.body }}>{r.grade ?? "—"}</td>
                   <td style={{ ...td, color: A.body }}>{r.guestCount}</td>

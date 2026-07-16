@@ -212,7 +212,7 @@ export default async function AdminUsersPage({
                 const isStudent = p.role === "student";
                 const mentor = p.studentAssignment?.mentor;
                 return (
-                  <tr key={p.id} style={{ borderBottom: `1px solid ${A.rule}` }}>
+                  <tr className="etu-row-hover" key={p.id} style={{ borderBottom: `1px solid ${A.rule}` }}>
                     <td style={td}>
                       {isStudent ? (
                         <Link

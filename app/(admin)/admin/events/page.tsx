@@ -108,7 +108,7 @@ export default async function AdminEventsListPage() {
               </tr>
             ) : (
               events.map((e) => (
-                <tr key={e.id} style={{ borderBottom: `1px solid ${A.rule}` }}>
+                <tr className="etu-row-hover" key={e.id} style={{ borderBottom: `1px solid ${A.rule}` }}>
                   <td style={{ ...td, fontWeight: 600, color: A.navy }}>{e.title}</td>
                   <td style={{ ...td, color: A.body }}>
                     {formatEventDateTime(e.startsAt)}
