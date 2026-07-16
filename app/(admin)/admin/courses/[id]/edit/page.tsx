@@ -10,6 +10,9 @@ import {
   updateCourseMetadataAction,
   updateWeekAction,
   archiveCourseAction,
+  addWeekAction,
+  deleteWeekAction,
+  duplicateCourseAction,
 } from "../../actions";
 
 export const metadata = { title: "Edit course · Admin" };
@@ -19,15 +22,18 @@ export default async function EditCoursePage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ saved?: string }>;
+  searchParams: Promise<{ saved?: string; error?: string }>;
 }) {
   const { id } = await params;
-  const { saved } = await searchParams;
+  const { saved, error } = await searchParams;
 
   const course = await prisma.course.findUnique({
     where: { id },
     include: {
-      courseWeeks: { orderBy: { weekNo: "asc" } },
+      courseWeeks: {
+        orderBy: { weekNo: "asc" },
+        include: { _count: { select: { responses: true } } },
+      },
       _count: { select: { enrollments: true } },
     },
   });
@@ -35,6 +41,9 @@ export default async function EditCoursePage({
 
   const updateMeta = updateCourseMetadataAction.bind(null, id);
   const archive = archiveCourseAction.bind(null, id);
+  const addWeek = addWeekAction.bind(null, id);
+  const duplicate = duplicateCourseAction.bind(null, id);
+  const lastWeekNo = course.courseWeeks.at(-1)?.weekNo;
 
   return (
     <div style={{ maxWidth: 880 }}>
@@ -65,14 +74,61 @@ export default async function EditCoursePage({
         >
           Edit course
         </h1>
-        <p style={{ marginTop: 8, color: A.muted, fontSize: 14 }}>
-          {course.publishedAt ? "Published" : "Draft"} · /courses/{course.slug}{" "}
-          · {course._count.enrollments} enrolled
-        </p>
+        <div
+          style={{
+            marginTop: 8,
+            display: "flex",
+            alignItems: "center",
+            gap: 18,
+            flexWrap: "wrap",
+          }}
+        >
+          <p style={{ margin: 0, color: A.muted, fontSize: 14 }}>
+            {course.publishedAt ? "Published" : "Draft"} · /courses/
+            {course.slug} · {course._count.enrollments} enrolled
+          </p>
+          <Link
+            href={`/courses/${course.slug}`}
+            style={{
+              color: A.navy,
+              fontSize: 13,
+              fontWeight: 600,
+              textDecoration: "none",
+              borderBottom: `2px solid ${A.gold}`,
+              paddingBottom: 1,
+            }}
+          >
+            View public page
+          </Link>
+          <form action={duplicate} style={{ display: "inline" }}>
+            <button
+              type="submit"
+              style={{
+                background: "transparent",
+                border: "none",
+                padding: "0 0 1px",
+                color: A.navy,
+                fontFamily: A.fontBody,
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: "pointer",
+                borderBottom: `2px solid ${A.gold}`,
+              }}
+            >
+              Duplicate as draft
+            </button>
+          </form>
+        </div>
       </div>
 
-      {saved && (
+      {saved === "1" && (
         <div style={{ ...s.alertInfo, marginBottom: 20 }}>Saved.</div>
+      )}
+      {error === "week-locked" && (
+        <div style={{ ...s.alertError, marginBottom: 20 }}>
+          That week can&apos;t be deleted — only the last week can be removed,
+          and only if no student has submitted answers for it.
+        </div>
       )}
 
       <div
@@ -137,13 +193,17 @@ export default async function EditCoursePage({
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {course.courseWeeks.map((w) => {
           const updateWeek = updateWeekAction.bind(null, w.id);
+          const justSaved = saved === `w${w.weekNo}`;
+          const deletable =
+            w.weekNo === lastWeekNo && w._count.responses === 0;
           return (
             <form
               key={w.id}
+              id={`week-${w.weekNo}`}
               action={updateWeek}
               style={{
                 background: "#fff",
-                border: `1px solid ${A.rule}`,
+                border: `1px solid ${justSaved ? "#1f8a5b" : A.rule}`,
                 borderRadius: 6,
                 padding: 24,
                 display: "flex",
@@ -153,14 +213,54 @@ export default async function EditCoursePage({
             >
               <div
                 style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  letterSpacing: 1.2,
-                  textTransform: "uppercase",
-                  color: A.gold,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 12,
                 }}
               >
-                Week {w.weekNo}
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: 1.2,
+                    textTransform: "uppercase",
+                    color: A.gold,
+                  }}
+                >
+                  Week {w.weekNo}
+                  {w._count.responses > 0 && (
+                    <span
+                      style={{
+                        marginLeft: 10,
+                        color: A.muted,
+                        letterSpacing: 0.4,
+                        textTransform: "none",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {w._count.responses} student{" "}
+                      {w._count.responses === 1 ? "response" : "responses"}
+                    </span>
+                  )}
+                </div>
+                {justSaved && (
+                  <span
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      letterSpacing: 0.6,
+                      textTransform: "uppercase",
+                      padding: "4px 10px",
+                      borderRadius: 99,
+                      background: "rgba(31, 138, 91, 0.12)",
+                      color: "#1f8a5b",
+                      border: "1px solid rgba(31, 138, 91, 0.3)",
+                    }}
+                  >
+                    Saved
+                  </span>
+                )}
               </div>
               <div>
                 <label htmlFor={`week-title-${w.id}`} style={s.fieldLabel}>
@@ -206,7 +306,14 @@ export default async function EditCoursePage({
                 </p>
                 <QuestionBuilder name="questions" defaultValue={w.questions} />
               </div>
-              <div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 12,
+                }}
+              >
                 <button
                   type="submit"
                   style={{
@@ -217,10 +324,49 @@ export default async function EditCoursePage({
                 >
                   Save week
                 </button>
+                {deletable && (
+                  <button
+                    type="submit"
+                    formAction={deleteWeekAction.bind(null, w.id)}
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      padding: 0,
+                      color: "#b22234",
+                      fontFamily: A.fontBody,
+                      fontSize: 13,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Delete week
+                  </button>
+                )}
               </div>
             </form>
           );
         })}
+
+        <form action={addWeek}>
+          <button
+            type="submit"
+            style={{
+              width: "100%",
+              padding: "14px 16px",
+              borderRadius: 6,
+              border: `1px dashed ${A.navy}`,
+              background: "#fff",
+              color: A.navy,
+              fontFamily: A.fontBody,
+              fontWeight: 700,
+              fontSize: 13,
+              letterSpacing: 0.4,
+              cursor: "pointer",
+            }}
+          >
+            + Add week {(lastWeekNo ?? 0) + 1}
+          </button>
+        </form>
       </div>
 
       <div

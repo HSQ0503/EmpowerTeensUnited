@@ -141,6 +141,139 @@ export async function updateWeekAction(weekId: string, formData: FormData) {
   revalidatePath(`/courses/${week.course.slug}`);
   revalidatePath(`/me/courses/${week.course.slug}`);
   revalidatePath(`/me/courses/${week.course.slug}/week/${week.weekNo}`);
+  redirect(
+    `/admin/courses/${week.course.id}/edit?saved=w${week.weekNo}#week-${week.weekNo}`,
+  );
+}
+
+export async function addWeekAction(courseId: string) {
+  await requireRole("admin");
+
+  const course = await prisma.course.findUnique({
+    where: { id: courseId },
+    select: { slug: true },
+  });
+  if (!course) redirect("/admin/courses");
+
+  const agg = await prisma.courseWeek.aggregate({
+    where: { courseId },
+    _max: { weekNo: true },
+  });
+  const nextNo = (agg._max.weekNo ?? 0) + 1;
+
+  await prisma.$transaction([
+    prisma.courseWeek.create({
+      data: {
+        courseId,
+        weekNo: nextNo,
+        title: `Week ${nextNo}`,
+        body: "",
+        questions: [] as unknown as Prisma.InputJsonValue,
+      },
+    }),
+    prisma.course.update({
+      where: { id: courseId },
+      data: { weeks: nextNo },
+    }),
+  ]);
+
+  revalidatePath(`/admin/courses/${courseId}/edit`);
+  revalidatePath(`/courses/${course.slug}`);
+  revalidatePath(`/me/courses/${course.slug}`);
+  redirect(`/admin/courses/${courseId}/edit?saved=w${nextNo}#week-${nextNo}`);
+}
+
+export async function deleteWeekAction(weekId: string) {
+  await requireRole("admin");
+
+  const week = await prisma.courseWeek.findUnique({
+    where: { id: weekId },
+    include: {
+      course: { select: { id: true, slug: true, weeks: true } },
+      _count: { select: { responses: true } },
+    },
+  });
+  if (!week) redirect("/admin/courses");
+
+  const agg = await prisma.courseWeek.aggregate({
+    where: { courseId: week.course.id },
+    _max: { weekNo: true },
+  });
+
+  // Only the last week can go, and never one students have answered —
+  // deleting mid-sequence would break weekNo ordering and student progress.
+  if (week.weekNo !== agg._max.weekNo || week._count.responses > 0) {
+    redirect(`/admin/courses/${week.course.id}/edit?error=week-locked`);
+  }
+
+  await prisma.$transaction([
+    prisma.courseWeek.delete({ where: { id: weekId } }),
+    prisma.course.update({
+      where: { id: week.course.id },
+      data: { weeks: week.weekNo - 1 },
+    }),
+  ]);
+
+  revalidatePath(`/admin/courses/${week.course.id}/edit`);
+  revalidatePath(`/courses/${week.course.slug}`);
+  revalidatePath(`/me/courses/${week.course.slug}`);
+  redirect(`/admin/courses/${week.course.id}/edit?saved=1`);
+}
+
+export async function duplicateCourseAction(courseId: string) {
+  const { profile } = await requireRole("admin");
+
+  const source = await prisma.course.findUnique({
+    where: { id: courseId },
+    include: { courseWeeks: { orderBy: { weekNo: "asc" } } },
+  });
+  if (!source) redirect("/admin/courses");
+
+  let slug = `${source.slug}-copy`;
+  for (let i = 2; await prisma.course.findUnique({ where: { slug } }); i++) {
+    slug = `${source.slug}-copy-${i}`;
+  }
+
+  const copy = await prisma.course.create({
+    data: {
+      slug,
+      title: `${source.title} (copy)`,
+      body: source.body,
+      coverImageUrl: source.coverImageUrl,
+      location: source.location,
+      startsOn: source.startsOn,
+      weeks: source.weeks,
+      ageMin: source.ageMin,
+      ageMax: source.ageMax,
+      language: source.language,
+      cohortCap: source.cohortCap,
+      certificate: source.certificate,
+      publishedAt: null,
+      createdById: profile.id,
+      courseWeeks: {
+        create: source.courseWeeks.map((w) => ({
+          weekNo: w.weekNo,
+          title: w.title,
+          body: w.body,
+          questions: w.questions as Prisma.InputJsonValue,
+        })),
+      },
+    },
+  });
+
+  revalidatePath("/admin/courses");
+  redirect(`/admin/courses/${copy.id}/edit?saved=1`);
+}
+
+export async function restoreCourseAction(courseId: string) {
+  await requireRole("admin");
+  await prisma.course.update({
+    where: { id: courseId },
+    data: { archivedAt: null },
+  });
+  revalidatePath("/admin/courses");
+  revalidatePath("/courses");
+  redirect("/admin/courses");
 }
 
 export async function archiveCourseAction(courseId: string) {

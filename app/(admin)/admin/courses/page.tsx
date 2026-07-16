@@ -3,18 +3,26 @@ import { requireRole } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { A } from "@/app/components/tokens";
 import { formatShortDate } from "@/lib/dates";
+import { restoreCourseAction } from "./actions";
 
 export const metadata = { title: "Courses · Admin" };
 
 export default async function AdminCoursesListPage() {
   await requireRole("admin");
-  const courses = await prisma.course.findMany({
-    where: { archivedAt: null },
-    orderBy: { startsOn: "desc" },
-    include: {
-      _count: { select: { enrollments: true, courseWeeks: true } },
-    },
-  });
+  const [courses, archived] = await Promise.all([
+    prisma.course.findMany({
+      where: { archivedAt: null },
+      orderBy: { startsOn: "desc" },
+      include: {
+        _count: { select: { enrollments: true, courseWeeks: true } },
+      },
+    }),
+    prisma.course.findMany({
+      where: { archivedAt: { not: null } },
+      orderBy: { archivedAt: "desc" },
+      select: { id: true, title: true, archivedAt: true },
+    }),
+  ]);
 
   return (
     <div>
@@ -111,7 +119,7 @@ export default async function AdminCoursesListPage() {
               </tr>
             ) : (
               courses.map((c) => (
-                <tr key={c.id} style={{ borderBottom: `1px solid ${A.rule}` }}>
+                <tr className="etu-row-hover" key={c.id} style={{ borderBottom: `1px solid ${A.rule}` }}>
                   <td style={{ ...td, fontWeight: 600, color: A.navy }}>
                     {c.title}
                   </td>
@@ -161,9 +169,77 @@ export default async function AdminCoursesListPage() {
         </table>
         </div>
       </div>
+
+      {archived.length > 0 && (
+        <div style={{ marginTop: 40 }}>
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: 1.4,
+              textTransform: "uppercase",
+              color: A.muted,
+              marginBottom: 12,
+            }}
+          >
+            Archived ({archived.length})
+          </div>
+          <div
+            style={{
+              background: "#fff",
+              border: `1px solid ${A.rule}`,
+              borderRadius: 6,
+              overflow: "hidden",
+            }}
+          >
+            {archived.map((c, i) => (
+              <div
+                key={c.id}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 16,
+                  padding: "12px 16px",
+                  borderBottom:
+                    i === archived.length - 1
+                      ? "none"
+                      : `1px solid ${A.rule}`,
+                }}
+              >
+                <div>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: A.body }}>
+                    {c.title}
+                  </span>
+                  <span style={{ marginLeft: 12, fontSize: 13, color: A.muted }}>
+                    archived {c.archivedAt ? formatShortDate(c.archivedAt) : ""}
+                  </span>
+                </div>
+                <form action={restoreCourseAction.bind(null, c.id)}>
+                  <button type="submit" style={restoreButton}>
+                    Restore
+                  </button>
+                </form>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
+const restoreButton = {
+  background: "transparent",
+  border: "none",
+  padding: "0 0 2px",
+  color: A.navy,
+  fontFamily: A.fontBody,
+  fontSize: 13,
+  fontWeight: 600,
+  cursor: "pointer",
+  borderBottom: `2px solid ${A.gold}`,
+};
 
 const th = {
   padding: "12px 16px",
