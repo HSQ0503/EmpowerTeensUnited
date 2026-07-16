@@ -1,23 +1,69 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState, type ComponentType, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  BookOpen,
+  CalendarDays,
+  HeartHandshake,
+  Inbox,
+  LayoutDashboard,
+  MailPlus,
+  Newspaper,
+  QrCode,
+  Send,
+  UserCog,
+  UsersRound,
+} from "lucide-react";
 import { EtuLockup } from "@/app/components/Logo";
 import { A } from "@/app/components/tokens";
 
-const NAV: Array<[string, string]> = [
-  ["Dashboard", "/admin"],
-  ["Events", "/admin/events"],
-  ["Courses", "/admin/courses"],
-  ["Mentorship", "/admin/mentorship"],
-  ["Blog", "/admin/blog"],
-  ["Contact", "/admin/contact"],
-  ["Broadcasts", "/admin/broadcasts"],
-  ["Users", "/admin/users"],
-  ["Invitations", "/admin/invitations"],
-  ["Team", "/admin/team"],
-  ["Settings", "/admin/settings"],
+type NavItem = {
+  label: string;
+  href: string;
+  icon: ComponentType<{ size?: number | string; strokeWidth?: number | string }>;
+  showBadge?: boolean;
+};
+
+const NAV_GROUPS: Array<{ label: string | null; items: NavItem[] }> = [
+  {
+    label: null,
+    items: [{ label: "Dashboard", href: "/admin", icon: LayoutDashboard }],
+  },
+  {
+    label: "Programs",
+    items: [
+      { label: "Events", href: "/admin/events", icon: CalendarDays },
+      { label: "Courses", href: "/admin/courses", icon: BookOpen },
+      { label: "Mentorship", href: "/admin/mentorship", icon: HeartHandshake },
+    ],
+  },
+  {
+    label: "Communication",
+    items: [
+      { label: "Contact", href: "/admin/contact", icon: Inbox, showBadge: true },
+      { label: "Broadcasts", href: "/admin/broadcasts", icon: Send },
+    ],
+  },
+  {
+    label: "Content",
+    items: [
+      { label: "Blog", href: "/admin/blog", icon: Newspaper },
+      { label: "Team", href: "/admin/team", icon: UsersRound },
+    ],
+  },
+  {
+    label: "People",
+    items: [
+      { label: "Users", href: "/admin/users", icon: UserCog },
+      { label: "Invitations", href: "/admin/invitations", icon: MailPlus },
+    ],
+  },
+  {
+    label: "At the door",
+    items: [{ label: "Scanner", href: "/admin/scan", icon: QrCode }],
+  },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -28,10 +74,12 @@ function isActive(pathname: string, href: string) {
 export function AdminShell({
   firstName,
   lastName,
+  newContactCount = 0,
   children,
 }: {
   firstName: string;
   lastName: string;
+  newContactCount?: number;
   children: ReactNode;
 }) {
   const pathname = usePathname();
@@ -146,27 +194,70 @@ export function AdminShell({
         </div>
 
         <nav style={{ display: "flex", flexDirection: "column", padding: "12px 0", flex: 1, overflowY: "auto" }}>
-          {NAV.map(([label, href]) => {
-            const active = isActive(pathname, href);
-            return (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setOpen(false)}
-                style={{
-                  padding: "10px 20px",
-                  color: active ? "#fff" : "rgba(255,255,255,0.85)",
-                  textDecoration: "none",
-                  fontSize: 14,
-                  fontWeight: active ? 700 : 500,
-                  borderLeft: `3px solid ${active ? A.gold : "transparent"}`,
-                  background: active ? "rgba(255,255,255,0.06)" : "transparent",
-                }}
-              >
-                {label}
-              </Link>
-            );
-          })}
+          {NAV_GROUPS.map((group, gi) => (
+            <div key={group.label ?? gi} style={{ marginTop: gi === 0 ? 0 : 18 }}>
+              {group.label && (
+                <div
+                  style={{
+                    padding: "0 20px 6px",
+                    fontSize: 10,
+                    fontWeight: 700,
+                    letterSpacing: 1.4,
+                    textTransform: "uppercase",
+                    color: "rgba(255,255,255,0.45)",
+                  }}
+                >
+                  {group.label}
+                </div>
+              )}
+              {group.items.map(({ label, href, icon: Icon, showBadge }) => {
+                const active = isActive(pathname, href);
+                const badge = showBadge && newContactCount > 0;
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setOpen(false)}
+                    className="etu-admin-navlink"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                      padding: "9px 20px",
+                      color: active ? "#fff" : "rgba(255,255,255,0.85)",
+                      textDecoration: "none",
+                      fontSize: 14,
+                      fontWeight: active ? 700 : 500,
+                      borderLeft: `3px solid ${active ? A.gold : "transparent"}`,
+                      background: active ? "rgba(255,255,255,0.06)" : "transparent",
+                    }}
+                  >
+                    <Icon size={16} strokeWidth={active ? 2.4 : 2} />
+                    <span style={{ flex: 1 }}>{label}</span>
+                    {badge && (
+                      <span
+                        style={{
+                          background: A.gold,
+                          color: A.navy,
+                          borderRadius: 99,
+                          minWidth: 20,
+                          height: 20,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 11,
+                          fontWeight: 800,
+                          padding: "0 6px",
+                        }}
+                      >
+                        {newContactCount > 99 ? "99+" : newContactCount}
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         <form action="/sign-out" method="post" style={{ padding: "12px 20px" }}>

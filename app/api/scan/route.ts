@@ -124,6 +124,9 @@ export async function GET(req: Request) {
     });
   }
 
+  const scanAgainHref =
+    auth.profile.role === "mentor" ? "/mentor/scan" : "/admin/scan";
+
   const guestLine = reg.guestCount
     ? `<p class="meta">+ ${reg.guestCount} guest${reg.guestCount === 1 ? "" : "s"}</p>`
     : "";
@@ -139,7 +142,7 @@ export async function GET(req: Request) {
          <p class="name">${safeName}${gradeLine}</p>
          ${guestLine}
          <p class="event">${safeEvent}</p>
-         <a href="/admin/scan">Scan another</a>
+         <a href="${scanAgainHref}">Scan another</a>
        </div>`
     : `<div class="card">
          <div class="badge ok">✓</div>
@@ -147,7 +150,7 @@ export async function GET(req: Request) {
          <p class="name">${safeName}${gradeLine}</p>
          ${guestLine}
          <p class="event">${safeEvent}</p>
-         <a href="/admin/scan">Scan another</a>
+         <a href="${scanAgainHref}">Scan another</a>
        </div>`;
 
   return htmlResponse(body);

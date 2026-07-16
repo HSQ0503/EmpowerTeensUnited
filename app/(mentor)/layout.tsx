@@ -9,6 +9,7 @@ export default async function MentorLayout({ children }: { children: ReactNode }
 
   const navLinks: Array<[string, string]> = [
     ["Students", "/mentor"],
+    ["Scan", "/mentor/scan"],
     ["Profile", "/mentor/profile"],
   ];
 
