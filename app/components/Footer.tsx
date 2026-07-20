@@ -209,7 +209,7 @@ export function Footer() {
       >
         <div>{t.footer.copy}</div>
         <div style={{ display: "flex", gap: 20 }}>
-          <a href="#" style={{ color: "inherit", textDecoration: "none" }}>{t.footer.legal}</a>
+          <Link href="/legal" style={{ color: "inherit", textDecoration: "none" }}>{t.footer.legal}</Link>
           <a href="#" style={{ color: "inherit", textDecoration: "none" }}>{t.footer.privacy}</a>
           <a href="#" style={{ color: "inherit", textDecoration: "none" }}>{t.footer.accessibility}</a>
         </div>
