@@ -8,7 +8,7 @@ import { submitContactAction } from "./actions";
 export const metadata = { title: "Contact · Empower Teens United" };
 
 const CARDS = [
-  { i: "📍", t: "Visit", l1: "6526 Old Brick Rd", l2: "Windermere, FL 34786" },
+  { i: "📍", t: "Visit", l1: "8276 Maritime Flag St", l2: "Unit 1208 · Windermere, FL 34786" },
   {
     i: "✉️",
     t: "Get in touch",

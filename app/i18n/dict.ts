@@ -249,8 +249,8 @@ export const en = {
     subtitle:
       "Whether you're a teen, a parent, an educator or a future partner — we'd love to hear from you.",
     visit: "Visit us",
-    visitL1: "6526 Old Brick Road",
-    visitL2: "Suite 120-123 · Windermere, FL 34786",
+    visitL1: "8276 Maritime Flag St",
+    visitL2: "Unit 1208 · Windermere, FL 34786",
     inTouch: "Get in touch",
     hours: "Office hours",
     hoursL1: "Mon–Fri · 9:00am–6:00pm",
@@ -316,7 +316,7 @@ export const en = {
     legal: "Legal & Safety",
     privacy: "Privacy",
     accessibility: "Accessibility",
-    copy: "© 2026 Empower Teens United · 6526 Old Brick Rd Suite 120-123 · Windermere, FL 34786",
+    copy: "© 2026 Empower Teens United · 8276 Maritime Flag St Unit 1208 · Windermere, FL 34786",
   },
 };
 
@@ -572,8 +572,8 @@ export const es: Dict = {
     subtitle:
       "Si eres adolescente, padre, educador o futuro aliado — nos encantaría saber de ti.",
     visit: "Visítanos",
-    visitL1: "6526 Old Brick Road",
-    visitL2: "Suite 120-123 · Windermere, FL 34786",
+    visitL1: "8276 Maritime Flag St",
+    visitL2: "Unit 1208 · Windermere, FL 34786",
     inTouch: "Contáctanos",
     hours: "Horario",
     hoursL1: "Lun–Vie · 9:00am–6:00pm",
@@ -641,7 +641,7 @@ export const es: Dict = {
     legal: "Legal y Seguridad",
     privacy: "Privacidad",
     accessibility: "Accesibilidad",
-    copy: "© 2026 Empower Teens United · 6526 Old Brick Rd Suite 120-123 · Windermere, FL 34786",
+    copy: "© 2026 Empower Teens United · 8276 Maritime Flag St Unit 1208 · Windermere, FL 34786",
   },
 };
 
